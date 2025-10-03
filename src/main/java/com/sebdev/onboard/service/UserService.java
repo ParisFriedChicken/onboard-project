@@ -5,52 +5,46 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.sebdev.onboard.ws.obj.User;
+import com.sebdev.onboard.ws.obj.Player;
 
 public class UserService {
-	private List<User> users = new ArrayList<User>();
+	private List<Player> players = new ArrayList<Player>();
 	
 	public UserService() {
-		
-		this.users.add(new User("1", "Fabrice","Granjean","Dijon"));
-		this.users.add(new User("2", "Daniel","Rutin","Pau"));
-		this.users.add(new User("3", "Jaqueline","Daumier","Rennes"));
-		this.users.add(new User("4", "Thais","Jonchère","Courbevoie"));
-	
 	}
 	
-	public User getUser() {
+	public Player getUser() {
 		Random rn = new Random();
-		int select = rn.nextInt(this.users.size());
-		return this.users.get(select);
+		int select = rn.nextInt(this.players.size());
+		return this.players.get(select);
 	}
 	
-	public List<User> getUsers() {
-		return this.users;
+	public List<Player> getUsers() {
+		return this.players;
 	}
 	
-	public void addUser(User user) {
-		this.users.add(user);
+	public void addUser(Player player) {
+		this.players.add(player);
 	}
 
 	public void removeUser(String id) {
-		Iterator<User> it = this.users.iterator();
+		Iterator<Player> it = this.players.iterator();
 		while (it.hasNext()) {
-			User u = it.next();
+			Player u = it.next();
 			if (u.getId().equals(id)) {
-				this.users.remove(u);
+				this.players.remove(u);
 			}
 		}
 	}
 
-	public void updateUser(User user) {
-		Iterator<User> it = this.users.iterator();
+	public void updateUser(Player player) {
+		Iterator<Player> it = this.players.iterator();
 		while (it.hasNext()) {
-			User u = it.next();
-			if (u.getId().equals(user.getId())) {
-				this.users.remove(u);
+			Player u = it.next();
+			if (u.getId().equals(player.getId())) {
+				this.players.remove(u);
 			}
 		}
-		this.users.add(user);
+		this.players.add(player);
 	}
 }

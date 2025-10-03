@@ -1,25 +1,30 @@
 package com.sebdev.onboard.ws.endpoints.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.sebdev.onboard.service.UserService;
-import com.sebdev.onboard.ws.obj.User;
+import com.sebdev.onboard.ws.obj.Player;
+import com.sebdev.onboard.ws.obj.PlayerRepository;
 
 @RestController
 public class OnBoardEndPoint {
 	
 	private RestTemplate template;
 	private UserService userService;
+	private PlayerRepository playerRepository;
 	
-	public OnBoardEndPoint(RestTemplate template, UserService userService) {
+	public OnBoardEndPoint(RestTemplate template, UserService userService, PlayerRepository playerRepository) {
 		this.template = template;
 		this.userService = userService;
+		this.playerRepository = playerRepository;
 	}
 	
 	@RequestMapping("/")
@@ -38,29 +43,30 @@ public class OnBoardEndPoint {
 		return message;
 	}
 	
-	@RequestMapping("/user")
-	public User getUser() {
-		return this.userService.getUser();
+	@RequestMapping("/player")
+	public Player getPlayer(@RequestParam Long id) {
+		Optional<Player> player = this.playerRepository.findById(id);
+		return player.get();
 	}
 
-	@RequestMapping("/users")
-	public List<User> getUsers() {
-		return this.userService.getUsers();
+	@RequestMapping("/players")
+	public Iterable<Player> getPlayers() {
+		return this.playerRepository.findAll();
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST)
-	public void addUser(@RequestBody User user) {
-		this.userService.addUser(user);
+	@RequestMapping(value="/player", method=RequestMethod.POST)
+	public void addPlayer(@RequestBody Player player) {
+		this.playerRepository.save(player);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.PUT)
-	public void updateUser(@RequestBody User user) {
-		this.userService.updateUser(user);
+	@RequestMapping(value="/player", method=RequestMethod.PUT)
+	public void updatePlayer(@RequestBody Player player) {
+		this.playerRepository.save(player);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.DELETE)
-	public void removeUser(@RequestBody String id) {
-		this.userService.removeUser(id);
+	@RequestMapping(value="/player", method=RequestMethod.DELETE)
+	public void removePlayer(@RequestBody Player player) {
+		this.playerRepository.delete(player);
 	}
 
 }

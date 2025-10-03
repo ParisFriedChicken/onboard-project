@@ -1,19 +1,35 @@
 package com.sebdev.onboard.ws.obj;
 
-public class User {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-	private String id;
+@Entity
+public class Player {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)	
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String city;
 	
-	public User(String id, String firstName, String lastName, String city) {
-		this.id = id;
+	protected Player() {}
+	
+	public Player(String firstName, String lastName, String city) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.city = city;
 	}
 
+	@Override
+	public String toString() {
+		return String.format(
+	        "Player[id=%d, firstName='%s', lastName='%s', city='%s']",
+	        id, firstName, lastName, city);
+	  }
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -38,11 +54,11 @@ public class User {
 		this.city = city;
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }

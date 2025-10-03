@@ -1,16 +1,26 @@
 package com.sebdev.onboard;
 
+import java.util.Optional;
+import java.util.function.ToLongFunction;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.sebdev.onboard.service.UserService;
-
+import com.sebdev.onboard.ws.obj.Player;
+import com.sebdev.onboard.ws.obj.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @SpringBootApplication
 public class OnboardApplication {
 
+	private static final Logger log = LoggerFactory.getLogger(OnboardApplication.class);
+	
 	public static void main(String[] args) {
 		SpringApplication.run(OnboardApplication.class, args);
 	}
@@ -19,9 +29,44 @@ public class OnboardApplication {
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
 	}
-	
+
 	@Bean
 	public UserService getUserService() {
 		return new UserService();
+	}
+
+	@Bean
+	public CommandLineRunner demo(PlayerRepository repository) {
+		return (args) -> {
+			// save a few players
+			repository.save(new Player("Fabrice","Granjean","Dijon"));
+			repository.save(new Player("Daniel","Rutin","Pau"));
+			repository.save(new Player("Jaqueline","Daumier","Rennes"));
+			repository.save(new Player("David", "Palmer", "Washington"));
+			repository.save(new Player("Michelle", "Rutin", "Tokyo"));
+
+			// fetch all players
+			log.info("players found with findAll():");
+			log.info("-------------------------------");
+			repository.findAll().forEach(player -> {
+				log.info(player.toString());
+			});
+			log.info("");
+
+			// fetch an individual customer by ID
+			Optional<Player> player = repository.findById(1L);
+			log.info("Player found with findById(1L):");
+			log.info("--------------------------------");
+			log.info(player.toString());
+			log.info("");
+
+			// fetch customers by last name
+			log.info("Player found with findByLastName('Rutin'):");
+			log.info("--------------------------------------------");
+			repository.findByLastName("Rutin").forEach(rutin -> {
+				log.info(rutin.toString());
+			});
+			log.info("");
+		};
 	}
 }
