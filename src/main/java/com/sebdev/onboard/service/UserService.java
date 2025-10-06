@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.sebdev.onboard.ws.obj.Player;
+import com.sebdev.onboard.ws.entities.Player;
 
 public class UserService {
 	private List<Player> players = new ArrayList<Player>();

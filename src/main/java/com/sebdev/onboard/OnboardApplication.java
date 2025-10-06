@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.sebdev.onboard.service.UserService;
-import com.sebdev.onboard.ws.obj.Player;
-import com.sebdev.onboard.ws.obj.PlayerRepository;
+import com.sebdev.onboard.ws.entities.Player;
+import com.sebdev.onboard.ws.repositories.PlayerRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 @SpringBootApplication
@@ -39,11 +40,11 @@ public class OnboardApplication {
 	public CommandLineRunner demo(PlayerRepository repository) {
 		return (args) -> {
 			// save a few players
-			repository.save(new Player("Fabrice","Granjean","Dijon"));
-			repository.save(new Player("Daniel","Rutin","Pau"));
-			repository.save(new Player("Jaqueline","Daumier","Rennes"));
-			repository.save(new Player("David", "Palmer", "Washington"));
-			repository.save(new Player("Michelle", "Rutin", "Tokyo"));
+			repository.save(new Player("Fabrice","Granjean", "fg@gmail.com", "fg", "Dijon"));
+			repository.save(new Player("Daniel","Rutin", "dr@gmail.com", "dr", "Pau"));
+			repository.save(new Player("Jaqueline","Daumier", "jd@gmail.com", "jd","Rennes"));
+			repository.save(new Player("David", "Palmer", "dp@gmail.com", "dp", "Washington"));
+			repository.save(new Player("Michelle", "Rutin", "mr@gmail.com", "mr", "Tokyo"));
 
 			// fetch all players
 			log.info("players found with findAll():");
