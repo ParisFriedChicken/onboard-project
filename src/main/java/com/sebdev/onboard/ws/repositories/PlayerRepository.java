@@ -9,7 +9,7 @@ import com.sebdev.onboard.ws.entities.Player;
 
 public interface PlayerRepository extends CrudRepository<Player, Long> {
 
-  List<Player> findByLastName(String lastName);
+  List<Player> findByFullName(String fullname);
 
   Optional<Player> findById(Long id);
   

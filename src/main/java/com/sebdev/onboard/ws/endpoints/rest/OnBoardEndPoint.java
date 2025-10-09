@@ -2,10 +2,14 @@ package com.sebdev.onboard.ws.endpoints.rest;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import com.sebdev.onboard.service.UserService;
+import com.sebdev.onboard.service.PlayerService;
 import com.sebdev.onboard.ws.entities.Player;
 import com.sebdev.onboard.ws.repositories.PlayerRepository;
 
@@ -13,9 +17,11 @@ import com.sebdev.onboard.ws.repositories.PlayerRepository;
 public class OnBoardEndPoint {
 	
 	private PlayerRepository playerRepository;
+    private final PlayerService playerService;
 	
-	public OnBoardEndPoint(PlayerRepository playerRepository) {
+	public OnBoardEndPoint(PlayerRepository playerRepository, PlayerService playerService) {
 		this.playerRepository = playerRepository;
+		this.playerService = playerService;
 	}
 	
 	@GetMapping("/onboard")
@@ -23,26 +29,18 @@ public class OnBoardEndPoint {
 		return "Welcome Onboard !";
 	}
 
-	@GetMapping("/player")
-	public Player getPlayer(@RequestParam Long id) {
-		Optional<Player> player = this.playerRepository.findById(id);
-		return player.get();
+	@GetMapping("/players/me")
+	public ResponseEntity<Player> authenticatedPlayer() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Player currentUser = (Player) authentication.getPrincipal();
+        return ResponseEntity.ok(currentUser);
 	}
 
 	@GetMapping("/players")
-	public Iterable<Player> getPlayers() {
-		return this.playerRepository.findAll();
-	}
-
-	@PostMapping(value="/auth/signup")
-	public void addPlayer(@RequestBody Player player) {
-		this.playerRepository.save(player);
-	}
-
-	@PutMapping(value="/player")
-	public void updatePlayer(@RequestBody Player player) {
-		this.playerRepository.save(player);
-	}
+    public ResponseEntity<List<Player>> allUsers() {
+        List <Player> users = playerService.allPlayers();
+        return ResponseEntity.ok(users);
+    }
 
 	@DeleteMapping(value="/player")
 	public void removePlayer(@RequestBody Player player) {

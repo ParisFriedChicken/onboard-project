@@ -25,10 +25,7 @@ public class Player implements UserDetails {
 	private Long id;
 
     @Column(nullable = false)
-    private String firstName;
-	
-    @Column(nullable = false)
-    private String lastName;
+    private String fullName;
 	
     @Column(unique = true, length = 100, nullable = false)
     private String email;
@@ -36,7 +33,7 @@ public class Player implements UserDetails {
     @Column(nullable = false)
     private String password;
 	
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String city;
 
     @CreationTimestamp
@@ -49,9 +46,8 @@ public class Player implements UserDetails {
     
 	protected Player() {}
 	
-	public Player(String firstName, String lastName, String email, String password, String city) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Player(String fullName, String email, String password, String city) {
+		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.city = city;
@@ -60,8 +56,8 @@ public class Player implements UserDetails {
 	@Override
 	public String toString() {
 		return String.format(
-	        "Player[id=%d, firstName='%s', lastName='%s', email='%s', city='%s']",
-	        id, firstName, lastName, email, city);
+	        "Player[id=%d, fullName='%s', email='%s', city='%s']",
+	        id, fullName, email, city);
 	  }
 	
     @Override
@@ -74,20 +70,12 @@ public class Player implements UserDetails {
 		return email;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getFullName() {
+		return fullName;
 	}
 	
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	public String getLastName() {
-		return lastName;
-	}
-	
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 	
 	public String getCity() {

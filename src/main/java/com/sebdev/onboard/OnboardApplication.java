@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.sebdev.onboard.service.UserService;
 import com.sebdev.onboard.ws.entities.Player;
 import com.sebdev.onboard.ws.repositories.PlayerRepository;
 
@@ -31,20 +30,16 @@ public class OnboardApplication {
 		return builder.build();
 	}
 
-	@Bean
-	public UserService getUserService() {
-		return new UserService();
-	}
 
 	@Bean
 	public CommandLineRunner demo(PlayerRepository repository) {
 		return (args) -> {
 			// save a few players
-			repository.save(new Player("Fabrice","Granjean", "fg@gmail.com", "fg", "Dijon"));
-			repository.save(new Player("Daniel","Rutin", "dr@gmail.com", "dr", "Pau"));
-			repository.save(new Player("Jaqueline","Daumier", "jd@gmail.com", "jd","Rennes"));
-			repository.save(new Player("David", "Palmer", "dp@gmail.com", "dp", "Washington"));
-			repository.save(new Player("Michelle", "Rutin", "mr@gmail.com", "mr", "Tokyo"));
+			repository.save(new Player("Fabrice Granjean", "fg@gmail.com", "fg", "Dijon"));
+			repository.save(new Player("Daniel Rutin", "dr@gmail.com", "dr", "Pau"));
+			repository.save(new Player("Jaqueline Daumier", "jd@gmail.com", "jd","Rennes"));
+			repository.save(new Player("David Palmer", "dp@gmail.com", "dp", "Washington"));
+			repository.save(new Player("Michelle Rutin", "mr@gmail.com", "mr", "Tokyo"));
 
 			// fetch all players
 			log.info("players found with findAll():");
@@ -61,13 +56,6 @@ public class OnboardApplication {
 			log.info(player.toString());
 			log.info("");
 
-			// fetch customers by last name
-			log.info("Player found with findByLastName('Rutin'):");
-			log.info("--------------------------------------------");
-			repository.findByLastName("Rutin").forEach(rutin -> {
-				log.info(rutin.toString());
-			});
-			log.info("");
 		};
 	}
 }
