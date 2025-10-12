@@ -21,19 +21,19 @@ public class Player implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)	
-    @Column(nullable = false)
+    @Column(nullable = false, name = "id")
 	private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "fullName")
     private String fullName;
 	
-    @Column(unique = true, length = 100, nullable = false)
+    @Column(unique = true, length = 100, nullable = false, name = "email")
     private String email;
 	
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
     private String password;
 	
-    @Column(nullable = true)
+    @Column(nullable = true, name = "city")
     private String city;
 
     @CreationTimestamp

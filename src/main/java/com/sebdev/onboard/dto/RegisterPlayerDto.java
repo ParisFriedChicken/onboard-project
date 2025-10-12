@@ -7,6 +7,8 @@ public class RegisterPlayerDto {
     private String password;
     
     private String fullName;
+    
+    private String city;
 
 	public String getEmail() {
 		return email;
@@ -30,6 +32,14 @@ public class RegisterPlayerDto {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
     
 }

@@ -31,7 +31,7 @@ public class AuthenticationService {
     }
 
     public Player signup(RegisterPlayerDto input) {
-        Player player = new Player(input.getFullName(), input.getEmail(), passwordEncoder.encode(input.getPassword()), null);
+        Player player = new Player(input.getFullName(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getCity());
 
         return playerRepository.save(player);
     }

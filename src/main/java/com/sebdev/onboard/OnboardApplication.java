@@ -34,12 +34,6 @@ public class OnboardApplication {
 	@Bean
 	public CommandLineRunner demo(PlayerRepository repository) {
 		return (args) -> {
-			// save a few players
-			repository.save(new Player("Fabrice Granjean", "fg@gmail.com", "fg", "Dijon"));
-			repository.save(new Player("Daniel Rutin", "dr@gmail.com", "dr", "Pau"));
-			repository.save(new Player("Jaqueline Daumier", "jd@gmail.com", "jd","Rennes"));
-			repository.save(new Player("David Palmer", "dp@gmail.com", "dp", "Washington"));
-			repository.save(new Player("Michelle Rutin", "mr@gmail.com", "mr", "Tokyo"));
 
 			// fetch all players
 			log.info("players found with findAll():");
@@ -51,7 +45,7 @@ public class OnboardApplication {
 
 			// fetch an individual customer by ID
 			Optional<Player> player = repository.findById(1L);
-			log.info("Player found with findById(1L):");
+			log.info("Player found with findById(107L):");
 			log.info("--------------------------------");
 			log.info(player.toString());
 			log.info("");
