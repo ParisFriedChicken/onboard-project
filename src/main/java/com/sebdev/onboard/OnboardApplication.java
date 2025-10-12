@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.sebdev.onboard.ws.entities.Player;
-import com.sebdev.onboard.ws.repositories.PlayerRepository;
+import com.sebdev.onboard.model.Player;
+import com.sebdev.onboard.repository.PlayerRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

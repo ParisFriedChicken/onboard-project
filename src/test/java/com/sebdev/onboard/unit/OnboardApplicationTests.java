@@ -1,4 +1,4 @@
-package com.sebdev.onboard;
+package com.sebdev.onboard.unit;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

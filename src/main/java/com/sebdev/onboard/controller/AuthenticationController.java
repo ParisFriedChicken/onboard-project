@@ -1,4 +1,4 @@
-package com.sebdev.onboard.ws.endpoints.rest;
+package com.sebdev.onboard.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sebdev.onboard.dto.LoginPlayerDto;
 import com.sebdev.onboard.dto.RegisterPlayerDto;
+import com.sebdev.onboard.model.Player;
 import com.sebdev.onboard.responses.LoginResponse;
 import com.sebdev.onboard.service.AuthenticationService;
 import com.sebdev.onboard.service.JwtService;
-import com.sebdev.onboard.ws.entities.Player;
 
 @RequestMapping("/auth")
 @RestController

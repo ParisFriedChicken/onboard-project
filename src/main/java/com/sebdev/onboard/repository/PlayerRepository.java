@@ -1,11 +1,11 @@
-package com.sebdev.onboard.ws.repositories;
+package com.sebdev.onboard.repository;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.sebdev.onboard.ws.entities.Player;
+import com.sebdev.onboard.model.Player;
 
 public interface PlayerRepository extends CrudRepository<Player, Long> {
 

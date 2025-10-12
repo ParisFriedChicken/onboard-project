@@ -1,5 +1,6 @@
 package com.sebdev.onboard.service;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,19 +8,20 @@ import org.springframework.stereotype.Service;
 
 import com.sebdev.onboard.dto.LoginPlayerDto;
 import com.sebdev.onboard.dto.RegisterPlayerDto;
-import com.sebdev.onboard.ws.entities.Player;
-import com.sebdev.onboard.ws.repositories.PlayerRepository;
+import com.sebdev.onboard.model.Player;
+import com.sebdev.onboard.repository.PlayerRepository;
 
 @Service
 public class AuthenticationService {
-    private final PlayerRepository playerRepository;
+	
+	private final PlayerRepository playerRepository;
     
     private final PasswordEncoder passwordEncoder;
     
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationService(
-    		PlayerRepository playerRepository,
+    	PlayerRepository playerRepository,
         AuthenticationManager authenticationManager,
         PasswordEncoder passwordEncoder
     ) {

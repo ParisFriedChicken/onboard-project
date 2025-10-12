@@ -3,15 +3,17 @@ package com.sebdev.onboard.service;
 
 import org.springframework.stereotype.Service;
 
-import com.sebdev.onboard.ws.entities.Player;
-import com.sebdev.onboard.ws.repositories.PlayerRepository;
+import com.sebdev.onboard.model.Player;
+import com.sebdev.onboard.repository.PlayerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PlayerService {
-    private final PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
+    
+    public PlayerService() {}
 
     public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;

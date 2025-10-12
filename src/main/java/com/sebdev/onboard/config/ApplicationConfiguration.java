@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.sebdev.onboard.ws.repositories.PlayerRepository;
+import com.sebdev.onboard.repository.PlayerRepository;
+
 
 @Configuration
 public class ApplicationConfiguration {

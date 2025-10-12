@@ -1,4 +1,4 @@
-package com.sebdev.onboard.ws.entities;
+package com.sebdev.onboard.model;
 
 import java.util.Collection;
 import java.util.Date;
@@ -44,7 +44,7 @@ public class Player implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
     
-	protected Player() {}
+	public Player() {}
 	
 	public Player(String fullName, String email, String password, String city) {
 		this.fullName = fullName;

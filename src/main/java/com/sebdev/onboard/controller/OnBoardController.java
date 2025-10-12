@@ -1,25 +1,26 @@
-package com.sebdev.onboard.ws.endpoints.rest;
+package com.sebdev.onboard.controller;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import com.sebdev.onboard.model.Player;
+import com.sebdev.onboard.repository.PlayerRepository;
 import com.sebdev.onboard.service.PlayerService;
-import com.sebdev.onboard.ws.entities.Player;
-import com.sebdev.onboard.ws.repositories.PlayerRepository;
 
 @RestController
-public class OnBoardEndPoint {
+public class OnBoardController {
 	
 	private PlayerRepository playerRepository;
     private final PlayerService playerService;
 	
-	public OnBoardEndPoint(PlayerRepository playerRepository, PlayerService playerService) {
+	public OnBoardController(PlayerRepository playerRepository, PlayerService playerService) {
 		this.playerRepository = playerRepository;
 		this.playerService = playerService;
 	}
