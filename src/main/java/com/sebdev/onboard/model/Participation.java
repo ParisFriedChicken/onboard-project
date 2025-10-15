@@ -1,5 +1,6 @@
 package com.sebdev.onboard.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,7 +33,10 @@ public class Participation {
     
     @Column
     private Boolean noFlake;
-    
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal amount;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;

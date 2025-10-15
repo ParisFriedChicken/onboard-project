@@ -31,7 +31,7 @@ public class Game {
     private String address; 
 
     @Column(nullable = false, name = "date")
-    private String date; 
+    private Date date; 
     
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -43,7 +43,7 @@ public class Game {
     
 	public Game() {}
 	
-	public Game(Player player, String address, String date) {
+	public Game(Player player, String address, Date date) {
 		this.player = player;
 		this.address = address;
 		this.date = date;
@@ -80,11 +80,11 @@ public class Game {
 		this.address = address;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
