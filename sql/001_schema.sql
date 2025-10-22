@@ -26,7 +26,7 @@ ALTER TABLE public.game OWNER TO postgres;
 
 CREATE SEQUENCE public.game_seq
     START WITH 1
-    INCREMENT BY 50
+    INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
@@ -58,7 +58,7 @@ ALTER TABLE public.participation OWNER TO postgres;
 
 CREATE SEQUENCE public.participation_seq
     START WITH 1
-    INCREMENT BY 50
+    INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
@@ -91,13 +91,16 @@ ALTER TABLE public.player OWNER TO postgres;
 
 CREATE SEQUENCE public.player_seq
     START WITH 1
-    INCREMENT BY 50
+    INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
 
 
 ALTER SEQUENCE public.player_seq OWNER TO postgres;
+
+ALTER TABLE player
+ALTER COLUMN id SET DEFAULT nextval('player_seq');
 
 --
 -- TOC entry 4926 (class 0 OID 24576)

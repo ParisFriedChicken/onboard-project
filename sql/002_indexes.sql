@@ -18,6 +18,8 @@
 -- Avant : full scan de la table player.
 -- ================================================================
 
+DROP INDEX IF EXISTS idx_participation_player;
+
 -- Avant index : mesurer le plan
 EXPLAIN ANALYZE 
 SELECT amount, no_flake, game_id, player_id FROM participation WHERE player_id = 107;
@@ -38,6 +40,8 @@ SELECT amount, no_flake, game_id, player_id FROM participation WHERE player_id =
 -- Avant : connexion lente.
 -- ================================================================
 
+DROP INDEX IF EXISTS idx_player_email;
+
 -- Avant index
 EXPLAIN ANALYZE SELECT id, city, created_at, email, full_name, password, updated_at
 	FROM public.player 
@@ -53,11 +57,14 @@ EXPLAIN ANALYZE SELECT id, city, created_at, email, full_name, password, updated
 
 
 -- ================================================================
--- Cas 3 : Recherche textuelle produit
+-- Cas 3 : KPI 1 : Quantité de commissions sur les participations 
+-- des 30 derniers jours
 -- ---------------------------------------------------------------
--- Requête : trouver un produit par nom partiel.
--- Exemple : "SELECT * FROM products WHERE name ILIKE '%controller%';"
+-- Requête : Somme de toutes les participations sur une plage de 
+-- date nécéssitant une jointure avec la table game
 -- ================================================================
+
+DROP INDEX IF EXISTS idx_game;
 
 -- Avant index
 EXPLAIN ANALYZE
@@ -65,51 +72,22 @@ SELECT ROUND(SUM(amount) * 0.1, 2) AS total_gain_last_30_days
 FROM participation p INNER JOIN game g ON p.game_id = g.id
 WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days';
 
--- ✅ Création d’un index trigram (pg_trgm nécessaire)
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
-CREATE INDEX IF NOT EXISTS idx_products_name_trgm
-    ON products USING gin (name gin_trgm_ops);
+-- Création d’un index 
+CREATE INDEX IF NOT EXISTS idx_game
+    ON game(id);
 
 -- Après index
 EXPLAIN ANALYZE
-SELECT * FROM products WHERE name ILIKE '%controller%';
+SELECT ROUND(SUM(amount) * 0.1, 2) AS total_gain_last_30_days
+FROM participation p INNER JOIN game g ON p.game_id = g.id
+WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days';
 
 
--- ================================================================
--- 4️⃣ Cas 4 : Index partiel (tickets ouverts)
--- ---------------------------------------------------------------
--- Si ta table tickets contient status = 'OPEN' / 'CLOSED'...
--- On indexe uniquement les tickets ouverts.
--- ================================================================
-
-CREATE INDEX IF NOT EXISTS idx_tickets_open_only
-    ON tickets (priority)
-    WHERE status = 'OPEN';
-
-
--- ================================================================
--- 5️⃣ Cas 5 : Index composite (user_id + created_at)
--- ---------------------------------------------------------------
--- Pour les historiques d’achats par utilisateur triés dans le temps.
--- ================================================================
-
-CREATE INDEX IF NOT EXISTS idx_orders_user_date
-    ON orders(user_id, created_at DESC);
-
-
--- ================================================================
--- 🧹 Nettoyage / maintenance
--- ---------------------------------------------------------------
--- Vérifie les index existants :
--- \d orders
--- \d products
---
 -- Met à jour les stats après ajout :
 ANALYZE;
 
 -- ================================================================
--- 📈 Notes de performance (à documenter dans rapport perfs)
+-- Notes de performance 
 -- ---------------------------------------------------------------
 -- Exemple de gain observé :
 --   Requête 1 : 4.12 ms → 0.05 ms  (~98.8 % gain)
