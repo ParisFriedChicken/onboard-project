@@ -12,7 +12,7 @@
 
 
 -- ================================================================
--- Cas 1 : Filtre sur player dans la table participation
+-- Request#1 : Filtre sur player dans la table participation
 -- ---------------------------------------------------------------
 -- Requête typique : lister les participations d'un player
 -- Avant : full scan de la table player.
@@ -47,7 +47,7 @@ EXPLAIN ANALYZE SELECT id, city, created_at, email, full_name, password, updated
 	FROM public.player 
 	WHERE email = 'eg2@gmail.com';
 
--- Index sur la colonne temporelle pour accélérer le tri & group by
+-- Index sur la colonne email pour accélérer la selection
 CREATE INDEX IF NOT EXISTS idx_player_email ON player(email);
 
 -- Après index
@@ -68,19 +68,25 @@ DROP INDEX IF EXISTS idx_game;
 
 -- Avant index
 EXPLAIN ANALYZE
-SELECT ROUND(SUM(amount) * 0.1, 2) AS total_gain_last_30_days
-FROM participation p INNER JOIN game g ON p.game_id = g.id
-WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days';
+SELECT p.full_name, count(g.id)
+FROM game g INNER JOIN player p ON p.id = g.host_player_id
+WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days'
+GROUP BY p.full_name
+ORDER BY count(g.id) DESC
+LIMIT 1;
 
 -- Création d’un index 
 CREATE INDEX IF NOT EXISTS idx_game
-    ON game(id);
+    ON game(date, host_player_id);
 
 -- Après index
 EXPLAIN ANALYZE
-SELECT ROUND(SUM(amount) * 0.1, 2) AS total_gain_last_30_days
-FROM participation p INNER JOIN game g ON p.game_id = g.id
-WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days';
+SELECT p.full_name, count(g.id)
+FROM game g INNER JOIN player p ON p.id = g.host_player_id
+WHERE date > CURRENT_TIMESTAMP - INTERVAL '30 days'
+GROUP BY p.full_name
+ORDER BY count(g.id) DESC
+LIMIT 1;
 
 
 -- Met à jour les stats après ajout :
@@ -90,9 +96,9 @@ ANALYZE;
 -- Notes de performance 
 -- ---------------------------------------------------------------
 -- Exemple de gain observé :
---   Requête 1 : 4.12 ms → 0.05 ms  (~98.8 % gain)
---   Requête 2 : 15.3 ms → 2.1 ms   (~86 % gain)
---   Requête 3 : 120 ms → 8.5 ms    (~92.9 % gain)
+--   Requête 1 : 1.597 ms → 0.058 ms  (96.3~ % gain)
+--   Requête 2 : 0.031 ms → 0.025 ms   (~19.3 % gain -> not really effective) 
+--   Requête 3 : 2.161 ms → 0.709 ms    (~67.1 % gain)
 --
 -- Capture des plans avant/après :
 --   https://explain.depesz.com/
