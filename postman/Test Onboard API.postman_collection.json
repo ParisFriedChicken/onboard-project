@@ -37,9 +37,22 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/auth/login",
+			"name": "http://localhost:8080/players",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZzJAZ21haWwuY29tIiwiaWF0IjoxNzYwMjk3MTA0LCJleHAiOjE3NjAzMDA3MDR9.X2hhfVGg7FNXHaQe7iwzfkuJwXs5YqiM1VtYCnICRkY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -51,22 +64,21 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/auth/login",
+					"raw": "http://localhost:8080/players",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"auth",
-						"login"
+						"players"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:8080/players",
+			"name": "Update player",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -143,6 +155,105 @@
 					"path": [
 						"players",
 						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"fg@gmail.com\",\r\n  \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/players/me",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/players/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"players",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZ0BnbWFpbC5jb20iLCJpYXQiOjE3NjIyMDMzNDAsImV4cCI6MTc2MjIwNjk0MH0.M0uJO-7MGj3Ncsbv6NuDrhDYR-NOUmUgbw2xemORTLY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 1,\r\n  \"address\": \"1, rue du Changement, 56000 Changé\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/game",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"game"
 					]
 				}
 			},
