@@ -14,12 +14,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Version;
 
 @Entity
 public class Game {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)	
+	@SequenceGenerator(name = "game_seq_gen", sequenceName = "game_seq", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "game_seq_gen")	
     @Column(nullable = false, name = "id")
 	private Long id;
 
@@ -40,6 +44,10 @@ public class Game {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
     
 	public Game() {}
 	
@@ -47,6 +55,13 @@ public class Game {
 		this.player = player;
 		this.address = address;
 		this.date = date;
+	}
+
+	@PrePersist
+	public void initVersion() {
+		if (this.version == null) {
+			this.version = 0L;
+		}
 	}
 
 	@Override
@@ -86,6 +101,14 @@ public class Game {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 }

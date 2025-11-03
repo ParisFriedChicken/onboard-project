@@ -30,26 +30,4 @@ public class OnboardApplication {
 		return builder.build();
 	}
 
-
-	@Bean
-	public CommandLineRunner demo(PlayerRepository repository) {
-		return (args) -> {
-
-			// fetch all players
-			log.info("players found with findAll():");
-			log.info("-------------------------------");
-			repository.findAll().forEach(player -> {
-				log.info(player.toString());
-			});
-			log.info("");
-
-			// fetch an individual customer by ID
-			Optional<Player> player = repository.findById(1L);
-			log.info("Player found with findById(107L):");
-			log.info("--------------------------------");
-			log.info(player.toString());
-			log.info("");
-
-		};
-	}
 }
