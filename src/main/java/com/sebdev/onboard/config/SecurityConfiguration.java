@@ -33,6 +33,7 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests( auth -> auth
                 		.requestMatchers("/auth/**").permitAll()
+                		.requestMatchers("/metrics/**").permitAll()
                 		.anyRequest().authenticated())
         		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
