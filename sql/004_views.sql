@@ -64,7 +64,7 @@ CREATE UNIQUE INDEX ON mv_best_buddies (buddy1, buddy2, count_game);
 ANALYZE mv_best_buddies;
 
 -- Create read-only user and grant select on views
-CREATE ROLE read_only_user WITH
+CREATE ROLE readonly_user WITH
 	LOGIN
 	NOSUPERUSER
 	NOCREATEDB
@@ -73,7 +73,7 @@ CREATE ROLE read_only_user WITH
 	NOREPLICATION
 	NOBYPASSRLS
 	CONNECTION LIMIT -1
-	PASSWORD 'read_only_user';
+	PASSWORD 'readonly_user';
 	
 	
 GRANT SELECT ON vw_total_gain_last_30_days TO readonly_user;
