@@ -4,11 +4,6 @@
 
 \restrict qUKPUfdF1XaZKFyr7OWIV8xItPXHqzd16bj3hHTVh8SfbK7sCcV2bF7xXlJjpVh
 
--- Dumped from database version 18.0
--- Dumped by pg_dump version 18.0
-
--- Started on 2025-10-22 21:07:36
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -21,60 +16,9 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE IF EXISTS onboard;
---
--- TOC entry 4938 (class 1262 OID 16388)
--- Name: onboard; Type: DATABASE; Schema: -; Owner: postgres
---
-
-CREATE DATABASE onboard WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'French_France.1252';
-
-
-ALTER DATABASE onboard OWNER TO postgres;
-
-\unrestrict qUKPUfdF1XaZKFyr7OWIV8xItPXHqzd16bj3hHTVh8SfbK7sCcV2bF7xXlJjpVh
-\connect onboard
-\restrict qUKPUfdF1XaZKFyr7OWIV8xItPXHqzd16bj3hHTVh8SfbK7sCcV2bF7xXlJjpVh
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 4 (class 2615 OID 2200)
--- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
---
-
-CREATE SCHEMA public;
-
-
-ALTER SCHEMA public OWNER TO pg_database_owner;
-
---
--- TOC entry 4939 (class 0 OID 0)
--- Dependencies: 4
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
-
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- TOC entry 223 (class 1259 OID 32828)
--- Name: game; Type: TABLE; Schema: public; Owner: postgres
---
+DROP TABLE IF EXISTS public.game;
+DROP TABLE IF EXISTS public.participation;
+DROP TABLE IF EXISTS public.player;
 
 CREATE TABLE public.game (
     id bigint NOT NULL,
@@ -103,6 +47,8 @@ CREATE SEQUENCE public.game_seq
 
 
 ALTER SEQUENCE public.game_seq OWNER TO postgres;
+
+ALTER TABLE public.game ALTER COLUMN id SET DEFAULT nextval('public.game_seq');
 
 --
 -- TOC entry 224 (class 1259 OID 32836)
@@ -137,7 +83,26 @@ CREATE SEQUENCE public.participation_seq
 
 ALTER SEQUENCE public.participation_seq OWNER TO postgres;
 
-ALTER TABLE participation ALTER COLUMN id SET DEFAULT nextval('participation_seq');
+ALTER TABLE public.participation ALTER COLUMN id SET DEFAULT nextval('public.participation_seq');
+
+--
+-- TOC entry 220 (class 1259 OID 16414)
+-- Name: player; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.player (
+    id bigint CONSTRAINT player_id_not_null1 NOT NULL,
+    city character varying(255),
+    created_at timestamp(6) without time zone,
+    email character varying(100) CONSTRAINT player_email_not_null1 NOT NULL,
+    full_name character varying(255) CONSTRAINT player_full_name_not_null1 NOT NULL,
+    password character varying(255) CONSTRAINT player_password_not_null1 NOT NULL,
+    updated_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.player OWNER TO postgres;
+
 --
 -- TOC entry 219 (class 1259 OID 16413)
 -- Name: player_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -153,25 +118,8 @@ CREATE SEQUENCE public.player_seq
 
 ALTER SEQUENCE public.player_seq OWNER TO postgres;
 
-ALTER TABLE game ALTER COLUMN id SET DEFAULT nextval('game_seq');
+ALTER TABLE public.player ALTER COLUMN id SET DEFAULT nextval('public.player_seq');
 
---
--- TOC entry 220 (class 1259 OID 16414)
--- Name: player; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.player (
-    id bigint DEFAULT nextval('public.player_seq'::regclass) CONSTRAINT player_id_not_null1 NOT NULL,
-    city character varying(255),
-    created_at timestamp(6) without time zone,
-    email character varying(100) CONSTRAINT player_email_not_null1 NOT NULL,
-    full_name character varying(255) CONSTRAINT player_full_name_not_null1 NOT NULL,
-    password character varying(255) CONSTRAINT player_password_not_null1 NOT NULL,
-    updated_at timestamp(6) without time zone
-);
-
-
-ALTER TABLE public.player OWNER TO postgres;
 
 --
 -- TOC entry 4940 (class 0 OID 0)
