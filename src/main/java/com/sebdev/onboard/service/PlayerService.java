@@ -87,7 +87,4 @@ public class PlayerService {
         return Optional.of(saved);
     }
 
-    public void deletePlayer(Player player) {
-        playerRepository.delete(player);
-    }
 }

@@ -9,11 +9,15 @@ SELECT
 FROM generate_series(1, 1000) AS s(i);
 
 -- 3000 fake games 
-INSERT INTO game (date, address, created_at)
+INSERT INTO game (date, address, created_at, status, max_players, min_players, game_type)
 SELECT
     NOW() - (i || ' days')::interval,
     'random',
-    NOW()
+    NOW(),
+    'scheduled',
+    (floor(random()*7)+2)::int,
+    2,
+    (floor(random()*5)+1)::int::text
 FROM generate_series(1, 3000) AS s(i);
 
 --Met a jour aleatoirement des hosts dans les games
@@ -104,7 +108,7 @@ WITH random_participation_players AS (
 			)) AS random_players,
 		
 		(SELECT ROW_NUMBER() OVER () as rn2, id as participation_id FROM participation) AS random_participations
-	WHERE random_players.rn1 = random_participations.rn2
+	WHERE random_players.rn1 = random_participation_players.rn2
 )
 UPDATE participation 
 SET player_id = random_participation_players.player_id
@@ -128,7 +132,7 @@ WITH random_participation_games AS (
 			)) AS random_games,
 		
 		(SELECT ROW_NUMBER() OVER () as rn2, id as participation_id FROM participation) AS random_participations
-	WHERE random_games.rn1 = random_participations.rn2
+	WHERE random_games.rn1 = random_participation_games.rn2
 )
 UPDATE participation 
 SET game_id = random_participation_games.game_id

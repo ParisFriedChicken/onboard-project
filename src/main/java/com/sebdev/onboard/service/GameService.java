@@ -60,6 +60,18 @@ public class GameService {
         if (game.getDate() != null) {
             existing.setDate(game.getDate());
         }
+        if (game.getStatus() != null) {
+            existing.setStatus(game.getStatus());
+        }
+        if (game.getMaxPlayers() != null) {
+            existing.setMaxPlayers(game.getMaxPlayers());
+        }
+        if (game.getMinPlayers() != null) {
+            existing.setMinPlayers(game.getMinPlayers());
+        }
+        if (game.getGameType() != null) {
+            existing.setGameType(game.getGameType());
+        }
         if (game.getVersion() != null) {
             existing.setVersion(game.getVersion());
         }

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sebdev.onboard.model.Player;
 import com.sebdev.onboard.model.Game;
@@ -47,29 +48,6 @@ public class OnBoardController {
         return ResponseEntity.ok(users);
     }
 
-	@DeleteMapping(value="/player")
-	public ResponseEntity<Void> removePlayer(@RequestBody Player player) {
-        if (player == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Optional<Player> target = Optional.empty();
-        if (player.getId() != null) {
-            target = playerService.findById(player.getId());
-        } else if (player.getEmail() != null) {
-            target = playerService.findByEmail(player.getEmail());
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (target.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        playerService.deletePlayer(target.get());
-        return ResponseEntity.noContent().build();
-    }
-
 	@PutMapping(value="/player")
 	public ResponseEntity<?> updatePlayer(@RequestBody Player player) {
         if (player == null || player.getId() == null) {
@@ -90,6 +68,24 @@ public class OnBoardController {
         }
     }
 
+	@PostMapping(value = "/game")
+	public ResponseEntity<?> createGame(@RequestBody Game game, UriComponentsBuilder uriBuilder) {
+		if (game == null) {
+			return ResponseEntity.badRequest().body("Game payload is required");
+		}
+		if (game.getAddress() == null || game.getDate() == null || game.getMaxPlayers() == null || game.getMinPlayers() == null || game.getGameType() == null) {
+			return ResponseEntity.badRequest().body("Address, date, maxPlayers, minPlayers and gameType are required");
+		}
+
+		try {
+			Game saved = gameService.saveGame(game);
+			java.net.URI location = uriBuilder.path("/game/{id}").buildAndExpand(saved.getId()).toUri();
+			return ResponseEntity.created(location).body(saved);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Error creating game");
+		}
+	}
+	
 	@PutMapping(value="/game")
 	public ResponseEntity<?> updateGame(@RequestBody Game game) {
 		if (game == null || game.getId() == null) {
@@ -108,4 +104,5 @@ public class OnBoardController {
 			return ResponseEntity.status(500).body("Error updating game");
 		}
 	}
+
 }

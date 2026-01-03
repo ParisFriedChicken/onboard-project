@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.game (
     id bigint NOT NULL,
     address character varying(255) NOT NULL,
+    status character varying(255) NOT NULL,
     created_at timestamp(6) without time zone,
     date timestamp(6) without time zone NOT NULL,
     version bigint DEFAULT 0 NOT NULL,

@@ -48,6 +48,19 @@ public class Game {
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
+
+    @Column(nullable = false, name = "status")
+    private String status;
+
+    // New mandatory fields
+    @Column(name = "max_players", nullable = false)
+    private Integer maxPlayers;
+
+    @Column(name = "min_players", nullable = false)
+    private Integer minPlayers;
+
+    @Column(name = "game_type", nullable = false)
+    private String gameType;
     
 	public Game() {}
 	
@@ -57,18 +70,40 @@ public class Game {
 		this.date = date;
 	}
 
+	public Game(Player player, String address, Date date, String status) {
+		this.player = player;
+		this.address = address;
+		this.date = date;
+		this.status = status;
+	}
+
+	public Game(Player player, String address, Date date, String status, Integer maxPlayers, Integer minPlayers, String gameType) {
+		this.player = player;
+		this.address = address;
+		this.date = date;
+		this.status = status;
+		this.maxPlayers = maxPlayers;
+		this.minPlayers = minPlayers;
+		this.gameType = gameType;
+	}
+
 	@PrePersist
 	public void initVersion() {
 		if (this.version == null) {
 			this.version = 0L;
 		}
+		// Ensure status has default before persisting
+		if (this.status == null) {
+			this.status = "scheduled";
+		}
+		// mandatory numeric fields should be set by the caller; migrations handle DB defaults for existing data
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
-	        "Player[id=%d, player='%s', address='%s', date='%s']",
-	        id, player.toString(), address, date);
+	        "Player[id=%d, player='%s', address='%s', date='%s', status='%s', maxPlayers='%s', minPlayers='%s', gameType='%s']",
+	        id, player.toString(), address, date, status, maxPlayers, minPlayers, gameType);
 	  }
 
     public Long getId() {
@@ -109,6 +144,38 @@ public class Game {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Integer getMaxPlayers() {
+		return maxPlayers;
+	}
+
+	public void setMaxPlayers(Integer maxPlayers) {
+		this.maxPlayers = maxPlayers;
+	}
+
+	public Integer getMinPlayers() {
+		return minPlayers;
+	}
+
+	public void setMinPlayers(Integer minPlayers) {
+		this.minPlayers = minPlayers;
+	}
+
+	public String getGameType() {
+		return gameType;
+	}
+
+	public void setGameType(String gameType) {
+		this.gameType = gameType;
 	}
 
 }
