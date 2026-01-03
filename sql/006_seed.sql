@@ -79,15 +79,12 @@ WHERE game.id = random_game_addresses.game_id;
 
 
 -- 10000 fake participations
-INSERT INTO participation (amount, no_flake, game_id, player_id)
+INSERT INTO participation (amount, status, game_id, player_id)
 SELECT 
-	round((random() * 5)::numeric, 0),
-	CASE 
-		WHEN random() < 0.25 THEN false
-		ELSE true
-	END AS flake,
-	1 as game_id,
-	252 as player_id
+    round((random() * 5)::numeric, 0),
+    CASE WHEN random() < 0.05 THEN 'cancelled' ELSE 'confirmed' END AS status,
+    1 as game_id,
+    252 as player_id
 FROM generate_series(1, 10000);
 
 

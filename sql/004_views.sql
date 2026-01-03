@@ -50,7 +50,7 @@ CREATE MATERIALIZED VIEW mv_best_buddies AS
 			CASE WHEN p1.player_id < p2.player_id THEN p2.player_id ELSE p1.player_id END AS player2
 		FROM participation p1 
 			INNER JOIN participation p2 ON (p1.game_id = p2.game_id and p1.player_id <> p2.player_id)
-		WHERE p1.no_flake = true and p2.no_flake = true
+		WHERE p1.status = 'confirmed' and p2.status = 'confirmed'
 		)
 	SELECT p1.full_name as buddy1, p2.full_name as buddy2, count(game_id) as count_game
 	FROM players_duos 

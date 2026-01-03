@@ -59,8 +59,8 @@ ALTER TABLE public.game ALTER COLUMN id SET DEFAULT nextval('public.game_seq');
 CREATE TABLE public.participation (
     id bigint NOT NULL,
     amount numeric(10,2),
+    status character varying(255) NOT NULL,
     created_at timestamp(6) without time zone,
-    no_flake boolean,
     updated_at timestamp(6) without time zone,
     game_id bigint,
     player_id bigint

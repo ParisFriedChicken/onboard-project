@@ -22,7 +22,7 @@ DROP INDEX IF EXISTS idx_participation_player;
 
 -- Avant index : mesurer le plan
 EXPLAIN ANALYZE 
-SELECT amount, no_flake, game_id, player_id FROM participation WHERE player_id = 107;
+SELECT amount, game_id, player_id FROM participation WHERE player_id = 107;
 
 -- Création de l’index
 CREATE INDEX IF NOT EXISTS idx_participation_player 
@@ -30,7 +30,7 @@ CREATE INDEX IF NOT EXISTS idx_participation_player
 
 -- Après index : mesurer le nouveau plan
 EXPLAIN ANALYZE 
-SELECT amount, no_flake, game_id, player_id FROM participation WHERE player_id = 107;
+SELECT amount, game_id, player_id FROM participation WHERE player_id = 107;
 
 
 -- ================================================================

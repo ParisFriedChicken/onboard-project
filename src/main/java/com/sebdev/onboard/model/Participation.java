@@ -33,11 +33,11 @@ public class Participation {
 	@JoinColumn(foreignKey = @ForeignKey(name = "player_fkey"))
     private Player player;
     
-    @Column
-    private Boolean noFlake;
-
     @Column(precision = 10, scale = 2)
     private BigDecimal amount;
+
+    @Column(nullable = false, name = "status")
+    private String status;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -49,17 +49,22 @@ public class Participation {
     
 	public Participation() {}
 	
-	public Participation(Game game, Player player, Boolean noFlake) {
-		this.game = game;
-		this.player = player;
-		this.noFlake = noFlake;
-	}
+	public Participation(Game game, Player player) {
+        this.game = game;
+        this.player = player;
+    }
+	
+	public Participation(Game game, Player player, String status) {
+        this.game = game;
+        this.player = player;
+        this.status = status;
+    }
 
 	@Override
 	public String toString() {
 		return String.format(
-	        "Player[id=%d, game='%s', noFlake='%s']",
-	        id, game.toString(), noFlake);
+	        "Player[id=%d, game='%s', status='%s']",
+	        id, game.toString(), status);
 	  }
 	
     public Long getId() {
@@ -86,12 +91,28 @@ public class Participation {
 		this.player = player;
 	}
 
-	public Boolean getNoFlake() {
-		return noFlake;
-	}
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	public void setNoFlake(Boolean noFlake) {
-		this.noFlake = noFlake;
-	}
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+     public Date getCreatedAt() {
+         return createdAt;
+     }
+
+     public Date getUpdatedAt() {
+         return updatedAt;
+     }
 
 }
