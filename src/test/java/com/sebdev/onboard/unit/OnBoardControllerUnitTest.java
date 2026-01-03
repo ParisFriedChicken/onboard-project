@@ -8,8 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sebdev.onboard.controller.OnBoardController;
 import com.sebdev.onboard.model.Game;
+import com.sebdev.onboard.model.Participation;
+import com.sebdev.onboard.model.Player;
 import com.sebdev.onboard.repository.PlayerRepository;
 import com.sebdev.onboard.service.GameService;
+import com.sebdev.onboard.service.ParticipationService;
 import com.sebdev.onboard.service.PlayerService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -38,9 +43,12 @@ public class OnBoardControllerUnitTest {
     @Mock
     private GameService gameService;
 
+    @Mock
+    private ParticipationService participationService;
+
     @BeforeEach
     public void setup() {
-        OnBoardController controller = new OnBoardController(playerRepository, playerService, gameService);
+        OnBoardController controller = new OnBoardController(playerRepository, playerService, gameService, participationService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -83,5 +91,27 @@ public class OnBoardControllerUnitTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addParticipation_shouldReturnCreated_whenServiceCreates() throws Exception {
+        Game game = new Game();
+        game.setId(1L);
+        Player player = new Player();
+        player.setId(2L);
+
+        Participation saved = new Participation(game, player, "confirmed");
+        saved.setId(99L);
+
+        when(participationService.createParticipation(1L, player)).thenReturn(java.util.Optional.of(saved));
+
+        // mock authentication principal returned by SecurityContextHolder
+        Authentication auth = org.mockito.Mockito.mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn(player);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        mockMvc.perform(post("/game/1/participation"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("id").value(99));
     }
 }
