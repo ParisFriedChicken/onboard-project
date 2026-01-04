@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,30 +25,37 @@ public class Player implements UserDetails {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
 	@SequenceGenerator(name = "player_seq_gen", sequenceName = "player_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "player_seq_gen")	
     @Column(nullable = false, name = "id")
+    @Schema(description = "Unique identifier for the player", example = "15456")	
 	private Long id;
 
     @Column(nullable = false, name = "fullName")
+	@Schema(description = "Full name of the player", example = "John Doe")
     private String fullName;
 	
     @Column(unique = true, length = 100, nullable = false, name = "email")
+	@Schema(description = "Email address of the player", example = "johndoe@gmail.com")
     private String email;
 	
     @Column(nullable = false, name = "password")
+	@Schema(description = "Password of the player", example = "xxx")
     private String password;
 	
     @Column(nullable = true, name = "city")
+	@Schema(description = "City of the player", example = "Bristol")
     private String city;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
+	@Schema(description = "Registering date of the player", example = "2023-10-05T14:48:00.000Z")
     private Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
+	@Schema(description = "Last update date of the player", example = "2023-10-05T14:48:00.000Z")
     private Date updatedAt;
     
 	public Player() {}

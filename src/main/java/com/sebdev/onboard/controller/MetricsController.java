@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController; 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Metrics", description = "Metrics and reporting endpoints")
 @RestController
 @RequestMapping("/metrics")
 public class MetricsController {
@@ -19,15 +23,16 @@ public class MetricsController {
     }
 
     @GetMapping("/top-hosts")
+    @Operation(summary = "Get top hosts by revenue")
     public List<Map<String, Object>> dailyRevenue() {
         String sql = "SELECT * FROM vw_top_50_hosts";
         return jdbc.queryForList(sql);
     }
 
     @GetMapping("/best-buddies")
+    @Operation(summary = "Get best buddies metrics")
     public List<Map<String, Object>> topProducts() {
         String sql = "SELECT * FROM mv_best_buddies";
         return jdbc.queryForList(sql);
     }
 }
-

@@ -22,6 +22,10 @@ import com.sebdev.onboard.service.PlayerService;
 import com.sebdev.onboard.service.GameService;
 import com.sebdev.onboard.service.ParticipationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "OnBoard", description = "Player, Game and Participation management endpoints")
 @RestController
 public class OnBoardController {
     
@@ -44,11 +48,13 @@ public class OnBoardController {
     }
     
     @GetMapping("/onboard")
+    @Operation(summary = "Simple onboarding greeting")
     public String onboard() {
         return "Welcome Onboard !";
     }
 
     @GetMapping("/players/me")
+    @Operation(summary = "Get the authenticated player's details")
     public ResponseEntity<Player> authenticatedPlayer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Player currentUser = (Player) authentication.getPrincipal();
@@ -56,12 +62,14 @@ public class OnBoardController {
     }
 
     @GetMapping("/players")
+    @Operation(summary = "List all players")
     public ResponseEntity<List<Player>> allUsers() {
         List <Player> users = playerService.allPlayers();
         return ResponseEntity.ok(users);
     }
 
     @PutMapping(value="/player")
+    @Operation(summary = "Update a player's profile")
     public ResponseEntity<?> updatePlayer(@RequestBody Player player) {
         if (player == null || player.getId() == null) {
             return ResponseEntity.badRequest().body("Player id is required for update");
@@ -82,6 +90,7 @@ public class OnBoardController {
     }
 
     @PostMapping(value = "/game")
+    @Operation(summary = "Create a new game")
     public ResponseEntity<?> createGame(@RequestBody Game game, UriComponentsBuilder uriBuilder) {
         if (game == null) {
             return ResponseEntity.badRequest().body("Game payload is required");
@@ -100,6 +109,7 @@ public class OnBoardController {
     }
     
     @PutMapping(value="/game")
+    @Operation(summary = "Update a game")
     public ResponseEntity<?> updateGame(@RequestBody Game game) {
         if (game == null || game.getId() == null) {
             return ResponseEntity.badRequest().body("Game id is required for update");
@@ -119,6 +129,7 @@ public class OnBoardController {
     }
 
     @PostMapping(value = "/game/{id}/participation")
+    @Operation(summary = "Add the authenticated player as a participant to a game")
     public ResponseEntity<?> addParticipation(@PathVariable("id") Long gameId, UriComponentsBuilder uriBuilder) {
         if (participationService == null) {
             // participation service not available (backward compatibility); fail explicitly
@@ -145,6 +156,7 @@ public class OnBoardController {
 
     // New endpoint: get a game by id including host and players
     @GetMapping(value = "/game/{id}")
+    @Operation(summary = "Get a game by id with host and players")
     public ResponseEntity<?> getGameById(@PathVariable("id") Long gameId) {
         Optional<Game> gameOpt = gameService.findById(gameId);
         if (gameOpt.isEmpty()) {

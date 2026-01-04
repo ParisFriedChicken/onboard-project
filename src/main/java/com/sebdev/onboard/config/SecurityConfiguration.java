@@ -35,6 +35,11 @@ public class SecurityConfiguration {
                 		.requestMatchers("/auth/**").permitAll()
                 		.requestMatchers("/metrics/**").permitAll()
                 		.requestMatchers("/onboard").permitAll()
+                		.requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                            ).permitAll()
                 		.anyRequest().authenticated())
         		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

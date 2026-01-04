@@ -13,7 +13,11 @@ import com.sebdev.onboard.responses.LoginResponse;
 import com.sebdev.onboard.service.AuthenticationService;
 import com.sebdev.onboard.service.JwtService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Endpoints for user signup and login")
 @RestController
 public class AuthenticationController {
     private final JwtService jwtService;
@@ -26,6 +30,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
+    @Operation(summary = "Register a new player")
     public ResponseEntity<Player> register(@RequestBody RegisterPlayerDto registerUserDto) {
         Player registeredUser = authenticationService.signup(registerUserDto);
 
@@ -33,6 +38,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Authenticate a player and return a JWT token")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginPlayerDto loginPlayerDto) {
         Player authenticatedPlayer = authenticationService.authenticate(loginPlayerDto);
 

@@ -1,5 +1,6 @@
 package com.sebdev.onboard.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 
@@ -25,41 +26,52 @@ public class Game {
 	@SequenceGenerator(name = "game_seq_gen", sequenceName = "game_seq", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "game_seq_gen")	
     @Column(nullable = false, name = "id")
+    @Schema(description = "Unique game identifier", example = "1")
 	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "host_player_id", foreignKey = @ForeignKey(name = "host_player_fkey"))
+    @Schema(description = "Host player for this game")
 	private Player player;
 	
     @Column(nullable = false, name = "address")
+    @Schema(description = "Game address or venue", example = "123 Main St")
     private String address; 
 
     @Column(nullable = false, name = "date")
+    @Schema(description = "Scheduled date/time for the game (ISO 8601)", example = "2026-01-01T14:00:00Z")
     private Date date; 
     
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
+    @Schema(description = "Timestamp when the game was created (read-only)", example = "2026-01-01T12:00:00Z")
     private Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
+    @Schema(description = "Timestamp when the game was last updated (read-only)", example = "2026-01-01T13:00:00Z")
     private Date updatedAt;
 
     @Version
     @Column(name = "version", nullable = false)
+    @Schema(description = "Optimistic lock/version value", example = "0")
     private Long version;
 
     @Column(nullable = false, name = "status")
+    @Schema(description = "Current game status", example = "scheduled")
     private String status;
 
     // New mandatory fields
     @Column(name = "max_players", nullable = false)
+    @Schema(description = "Maximum number of players allowed", example = "8")
     private Integer maxPlayers;
 
     @Column(name = "min_players", nullable = false)
+    @Schema(description = "Minimum number of players required", example = "2")
     private Integer minPlayers;
 
     @Column(name = "game_type", nullable = false)
+    @Schema(description = "Type of the game", example = "board_game")
     private String gameType;
     
 	public Game() {}
