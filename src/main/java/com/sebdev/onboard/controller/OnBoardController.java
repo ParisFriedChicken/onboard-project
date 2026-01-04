@@ -23,9 +23,11 @@ import com.sebdev.onboard.service.GameService;
 import com.sebdev.onboard.service.ParticipationService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "OnBoard", description = "Player, Game and Participation management endpoints")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 public class OnBoardController {
     
