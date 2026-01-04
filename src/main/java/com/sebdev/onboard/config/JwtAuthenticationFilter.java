@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,7 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (userEmail != null && authentication == null) {
+            // Previously the code only set authentication when the context was null.
+            // Spring Security may insert an AnonymousAuthenticationToken before our filter runs,
+            // which prevents setting the JWT auth. Treat anonymous or unauthenticated contexts
+            // as eligible to be replaced by the JWT authentication token.
+            if (userEmail != null && (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated())) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {

@@ -1,8 +1,9 @@
 -- 1 000 fake players
-INSERT INTO player (city, created_at, email, full_name, password)
+INSERT INTO player (city, created_at, last_active_at, email, full_name, password)
 SELECT
 	'City ' || i,
     NOW() - (i || ' days')::interval,
+    NOW(),
     'player' || i || '@example.com',
     'John Doe ' || i,
     'pwd'
@@ -105,7 +106,7 @@ WITH random_participation_players AS (
 			)) AS random_players,
 		
 		(SELECT ROW_NUMBER() OVER () as rn2, id as participation_id FROM participation) AS random_participations
-	WHERE random_players.rn1 = random_participations.rn2
+	WHERE random_players.rn1 = random_participation_players.rn2
 )
 UPDATE participation 
 SET player_id = random_participation_players.player_id

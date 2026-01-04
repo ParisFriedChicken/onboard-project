@@ -95,6 +95,7 @@ CREATE TABLE public.player (
     id bigint CONSTRAINT player_id_not_null1 NOT NULL,
     city character varying(255),
     created_at timestamp(6) without time zone,
+    last_active_at timestamp(6) without time zone,
     email character varying(100) CONSTRAINT player_email_not_null1 NOT NULL,
     full_name character varying(255) CONSTRAINT player_full_name_not_null1 NOT NULL,
     password character varying(255) CONSTRAINT player_password_not_null1 NOT NULL,

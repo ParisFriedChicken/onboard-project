@@ -1,8 +1,9 @@
 -- 1 000 fake players
-INSERT INTO player (city, created_at, email, full_name, password)
+INSERT INTO player (city, created_at, last_active_at, email, full_name, password)
 SELECT
 	'City ' || i,
     NOW() - (i || ' days')::interval,
+    NOW(),
     'player' || i || '@example.com',
     'John Doe ' || i,
     'pwd'

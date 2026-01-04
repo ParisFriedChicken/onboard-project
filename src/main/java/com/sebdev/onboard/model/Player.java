@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,6 +59,12 @@ public class Player implements UserDetails {
 	@Schema(description = "Last update date of the player", example = "2023-10-05T14:48:00.000Z")
     private Date updatedAt;
     
+    // New mandatory property: last_active_at (non-nullable). Initialize to now so it's never null on persist.
+    @JsonProperty("last_active_at")
+    @Column(nullable = false, name = "last_active_at")
+	@Schema(description = "Last active date of the player", example = "2023-10-05T14:48:00.000Z")
+    private Date lastActiveAt = new Date();
+    
 	public Player() {}
 	
 	public Player(String fullName, String email, String password, String city) {
@@ -70,8 +77,8 @@ public class Player implements UserDetails {
 	@Override
 	public String toString() {
 		return String.format(
-	        "Player[id=%d, fullName='%s', email='%s', city='%s']",
-	        id, fullName, email, city);
+	        "Player[id=%d, fullName='%s', email='%s', city='%s', lastActiveAt='%s']",
+	        id, fullName, email, city, lastActiveAt);
 	  }
 	
     @Override
@@ -123,6 +130,14 @@ public class Player implements UserDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+    public Date getLastActiveAt() {
+        return lastActiveAt;
+    }
+
+    public void setLastActiveAt(Date lastActiveAt) {
+        this.lastActiveAt = lastActiveAt;
+    }
 
 
 }
