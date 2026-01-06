@@ -190,4 +190,12 @@ public class Game {
 		this.gameType = gameType;
 	}
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
 }
