@@ -11,10 +11,15 @@ import com.sebdev.onboard.model.Participation;
 import com.sebdev.onboard.model.Player;
 import com.sebdev.onboard.repository.ParticipationRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.time.Instant;
+
 @Service
 public class ParticipationService {
     private final ParticipationRepository participationRepository;
     private final GameService gameService;
+    private static final Logger logger = LoggerFactory.getLogger(ParticipationService.class);
 
     public ParticipationService(ParticipationRepository participationRepository, GameService gameService) {
         this.participationRepository = participationRepository;
@@ -47,6 +52,12 @@ public class ParticipationService {
 
         Participation participation = new Participation(game, player, "confirmed");
         Participation saved = participationRepository.save(participation);
+
+        // Log participation creation: player's id, game id
+        String playerId = player == null ? null : String.valueOf(player.getId());
+        String gId = game == null ? null : String.valueOf(game.getId());
+        logger.info("{} - Participation created: playerId={}, gameId={}", Instant.now().toString(), playerId, gId);
+
         return Optional.of(saved);
     }
 

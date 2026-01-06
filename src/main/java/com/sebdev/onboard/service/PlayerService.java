@@ -9,10 +9,14 @@ import com.sebdev.onboard.repository.PlayerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.time.Instant;
 
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
     
 
     public PlayerService(PlayerRepository playerRepository) {
@@ -62,6 +66,10 @@ public class PlayerService {
 
         Player existing = existingOpt.get();
 
+        // capture old values for logging
+        String oldFullName = existing.getFullName();
+        String oldCity = existing.getCity();
+
         // If the request tries to change the email, ensure uniqueness
         if (player.getEmail() != null && !player.getEmail().equals(existing.getEmail())) {
             Optional<Player> byEmail = playerRepository.findByEmail(player.getEmail());
@@ -83,7 +91,16 @@ public class PlayerService {
             existing.setPassword(player.getPassword());
         }
 
+        // capture new values for logging
+        String newFullName = existing.getFullName();
+        String newCity = existing.getCity();
+
         Player saved = playerRepository.save(existing);
+
+        // Log the update with timestamp at INFO level
+        logger.info("{} - Player updated: id={}, oldFullName='{}', oldCity='{}', newFullName='{}', newCity='{}'",
+                Instant.now().toString(), saved.getId(), oldFullName, oldCity, newFullName, newCity);
+
         return Optional.of(saved);
     }
 

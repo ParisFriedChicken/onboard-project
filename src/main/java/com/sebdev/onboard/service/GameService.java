@@ -10,10 +10,14 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.time.Instant;
 
 @Service
 public class GameService {
     private final GameRepository gameRepository;
+    private static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
@@ -30,7 +34,12 @@ public class GameService {
     }
 
     public Game saveGame(Game game) {
-        return gameRepository.save(game);
+        Game saved = gameRepository.save(game);
+        // Log game creation: date, game_type, host's id, address
+        String hostId = saved.getPlayer() == null ? null : String.valueOf(saved.getPlayer().getId());
+        logger.info("{} - Game created: id={}, date={}, gameType='{}', hostId={}, address='{}'",
+                Instant.now().toString(), saved.getId(), saved.getDate(), saved.getGameType(), hostId, saved.getAddress());
+        return saved;
     }
 
     /**
