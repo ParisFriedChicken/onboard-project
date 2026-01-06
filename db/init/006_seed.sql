@@ -1,138 +1,48 @@
--- 1 000 fake players
+-- 1. Players with different reliability profiles
 INSERT INTO player (city, created_at, last_active_at, email, full_name, password)
 SELECT
 	'City ' || i,
-    NOW() - (i || ' days')::interval,
-    NOW(),
+	now() - (random() * interval '180 days'),
+	CASE
+	  WHEN i % 5 = 0 THEN now() - interval '90 days'   -- last activity long ago -> less reliable (20% of the players)
+	  ELSE now() - interval '7 days'                   -- last activity not long ago -> more reliable
+	END,
     'player' || i || '@example.com',
     'John Doe ' || i,
     'pwd'
-FROM generate_series(1, 1000) AS s(i);
+FROM generate_series(1, 50) i;
 
--- 3000 fake games 
-INSERT INTO game (date, address, created_at, status, max_players, min_players, game_type)
+
+-- 2. Games with more or less risky timing
+INSERT INTO game (created_at, date, max_players, address, status, version, host_player_id)
 SELECT
-    NOW() - (i || ' days')::interval,
-    'random',
-    NOW(),
-    'scheduled',
-    (floor(random()*7)+2)::int,
-    2,
-    (floor(random()*5)+1)::int::text
-FROM generate_series(1, 3000) AS s(i);
-
---Met a jour aleatoirement des hosts dans les games
-WITH random_game_players AS (
-	SELECT rn1, game_id, player_id
-	FROM 
-	(	SELECT ROW_NUMBER() OVER () as rn1, id as player_id
-		FROM 
-		(
-			(SELECT id FROM player ORDER BY random()) 
-			UNION ALL
-			(SELECT id FROM player ORDER BY random()) 	
-			UNION ALL
-			(SELECT id FROM player ORDER BY random()) 	
-		)) AS random_players,
-		
-		(SELECT ROW_NUMBER() OVER () as rn2, id as game_id FROM game) AS random_games
-	WHERE random_players.rn1 = random_games.rn2
-)
-UPDATE game 
-SET host_player_id = random_game_players.player_id
-FROM random_game_players
-WHERE game.id = random_game_players.game_id;
+  now() - (random() * interval '30 days'),
+  CASE
+    WHEN i % 4 = 0 THEN now() + interval '1 day'        -- created late -> risky (25% of the games)
+    ELSE now() + interval '10 days'
+  END,
+  CASE
+    WHEN i % 3 = 0 THEN 8								-- large game -> more risky (33% of the games)
+    ELSE 4
+  END,
+  '',
+  'created', 											-- initialize status to 'completed'
+  0,													
+  (SELECT id FROM player ORDER BY random() LIMIT 1)		-- initialize player randomly
+FROM generate_series(1, 80) i;
 
 
---Met a jour aleatoirement des adresses dans les games
-WITH random_game_addresses AS (
-  SELECT game_id, address
-		FROM 
-		(
-		SELECT ROW_NUMBER() OVER () as rn1, nom_rue || nom_ville as address
-		FROM (
-			SELECT 
-				round((random()*6+1)::numeric, 0) ||
-				', rue ' ||
-			  CASE
-				WHEN random() < 0.33 THEN 'de l''eglise'
-				WHEN random() < 0.50 THEN 'des blanchisseurs'
-				WHEN random() < 0.66 THEN 'du jeu de paume'
-				WHEN random() < 0.80 THEN 'Foch'
-				ELSE 'de la paix'
-			  END AS nom_rue ,
-			  CASE
-				WHEN random() < 0.50 THEN ', 44000 Nantes'
-				WHEN random() < 0.80 THEN ', 75011 Paris'
-				ELSE ', 69000 Bordeaux'
-			  END AS nom_ville
-			FROM
-				generate_series(1, 3004)
-			)
-		) AS random_address,
-	(SELECT ROW_NUMBER() OVER () as rn2, id as game_id FROM game) AS random_games
-  WHERE random_address.rn1 = random_games.rn2
-  )
-UPDATE game 
-SET address = random_game_addresses.address
-FROM random_game_addresses
-WHERE game.id = random_game_addresses.game_id;
-
-
--- 10000 fake participations
-INSERT INTO participation (amount, status, game_id, player_id)
-SELECT 
-    round((random() * 5)::numeric, 0),
-    CASE WHEN random() < 0.05 THEN 'cancelled' ELSE 'confirmed' END AS status,
-    1 as game_id,
-    252 as player_id
-FROM generate_series(1, 10000);
-
-
-
---Met a jour aleatoirement des players dans les participations
-WITH random_participation_players AS (
-	SELECT rn1, participation_id, player_id
-	FROM 
-	(	SELECT ROW_NUMBER() OVER () as rn1, id as player_id
-		FROM 
-		(
-			(SELECT id FROM player ORDER BY random()) UNION ALL (SELECT id FROM player ORDER BY random()) UNION ALL
-			(SELECT id FROM player ORDER BY random()) UNION ALL (SELECT id FROM player ORDER BY random()) UNION ALL
-			(SELECT id FROM player ORDER BY random()) UNION ALL (SELECT id FROM player ORDER BY random()) UNION ALL
-			(SELECT id FROM player ORDER BY random()) UNION ALL (SELECT id FROM player ORDER BY random()) UNION ALL
-			(SELECT id FROM player ORDER BY random()) UNION ALL (SELECT id FROM player ORDER BY random()) 
-			
-			)) AS random_players,
-		
-		(SELECT ROW_NUMBER() OVER () as rn2, id as participation_id FROM participation) AS random_participations
-	WHERE random_players.rn1 = random_participation_players.rn2
-)
-UPDATE participation 
-SET player_id = random_participation_players.player_id
-FROM random_participation_players
-WHERE participation.id = random_participation_players.participation_id;
-
-
---Met a jour aleatoirement des games dans les participations
-WITH random_participation_games AS (
-	SELECT rn1, participation_id, game_id
-	FROM 
-	(	SELECT ROW_NUMBER() OVER () as rn1, id as game_id
-		FROM 
-		(
-			(SELECT id FROM game ORDER BY random()) UNION ALL (SELECT id FROM game ORDER BY random()) UNION ALL
-			(SELECT id FROM game ORDER BY random()) UNION ALL (SELECT id FROM game ORDER BY random()) UNION ALL
-			(SELECT id FROM game ORDER BY random()) UNION ALL (SELECT id FROM game ORDER BY random()) UNION ALL
-			(SELECT id FROM game ORDER BY random()) UNION ALL (SELECT id FROM game ORDER BY random()) UNION ALL
-			(SELECT id FROM game ORDER BY random()) UNION ALL (SELECT id FROM game ORDER BY random()) 
-			
-			)) AS random_games,
-		
-		(SELECT ROW_NUMBER() OVER () as rn2, id as participation_id FROM participation) AS random_participations
-	WHERE random_games.rn1 = random_participation_games.rn2
-)
-UPDATE participation 
-SET game_id = random_participation_games.game_id
-FROM random_participation_games
-WHERE participation.id = random_participation_games.participation_id;
+-- 3. Participations with derivated status (not random)
+INSERT INTO participation (player_id, game_id, created_at, status)
+SELECT
+  p.id,
+  g.id,
+  g.created_at + interval '1 hour',
+  CASE
+    WHEN p.last_active_at < now() - interval '60 days'
+         AND g.date < now() + interval '2 days'
+      THEN 'no_show'
+    ELSE 'attended'
+  END
+FROM player p
+JOIN game g ON random() < 0.15;

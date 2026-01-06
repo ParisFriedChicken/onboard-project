@@ -28,7 +28,10 @@ CREATE TABLE public.game (
     date timestamp(6) without time zone NOT NULL,
     version bigint DEFAULT 0 NOT NULL,
     updated_at timestamp(6) without time zone,
-    host_player_id bigint
+    host_player_id bigint,
+    max_players integer DEFAULT 0 NOT NULL,
+    min_players integer DEFAULT 0 NOT NULL,
+    game_type character varying(255) DEFAULT '0' NOT NULL
 );
 
 
