@@ -1,3 +1,8 @@
+-- 0. Create a known player for testing
+INSERT INTO public.player(created_at, email, full_name, password, updated_at, last_active_at)
+	VALUES ('2025-10-12T21:14:15.371', 'eg2@gmail.com', 'Manu Gengen', 
+	'$2a$10$UMSUC.Wwm/cdxusincXjfOqIfmyETKIjNIjOLLB8jq8pWFbEEMiyW', '2025-10-12T21:14:15.371', '2025-10-12T21:14:15.371');
+
 -- 1. Players with different reliability profiles
 INSERT INTO player (city, created_at, last_active_at, email, full_name, password)
 SELECT
