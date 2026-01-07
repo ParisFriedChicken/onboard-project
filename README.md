@@ -1,83 +1,113 @@
-# 🎲 Onboard — Application de rencontres amicales par le biais des jeux de société
+# Onboard - Board Game Events Platform API
 
-Onboard est une API Spring Boot permettant de planifier des parties de jeux de société : joueurs, parties.  
-Le projet utilise **Spring Boot**, **Spring Data JPA**, et une base de données **PostgreSQL**.
-
----
-
-## 🚀 Fonctionnalités principales
-
-- ✅ CRUD complet sur les joueurs et les parties  
-- 🧩 Stockage des données avec PostgreSQL  
-- 🔒 Authentification JWT (Spring Security)  
-- 🧪 Tests unitaires et d’intégration (JUnit / MockMvc)
+A backend platform designed to manage board game events and participation data, 
+with a focus on reliability, data quality, and future AI enablement.
 
 ---
 
-## ⚙️ Prérequis
+## Product Context
 
-- [Java 17+](https://adoptium.net/)
-- [Maven](https://maven.apache.org/)
-- [PostgreSQL](https://www.postgresql.org/) ou H2 (par défaut)
-- IDE recommandé : [Spring Tools for Eclipse](https://spring.io/tools)
+This platform was designed to support the organization of board game events between players.
+Beyond core operational needs, its main goal is to provide reliable participation data
+to support product and operational decision-making.
 
 ---
 
-## 🛠️ Installation
+## Users & Use Cases
 
-Clone le projet :
-```bash
-git clone https://github.com/moncompte/boardly.git
-cd boardly
+- Product teams use the platform to analyze participation patterns and assess cancellation risks.
+- Operations teams rely on it to monitor event reliability and identify at-risk games.
+- The platform is intentionally structured to enable future data and AI use cases.
+
+---
+
+## Architecture Overview
+
+- REST API (Java backend)
+- PostgreSQL database
+- Docker Compose for local, production-like setup
+- OpenAPI specification for API contract
+
+---
+
+## Data Model
+
+The core data model is intentionally simple:
+- Players
+- Games (events)
+- Participations (linking players to games with a status)
+
+This structure allows basic operational workflows while remaining suitable for analytics
+and predictive use cases.
+
+---
+
+## Reliability & Operations
+
+The API exposes HTTP error codes and sanitized client-facing messages.
+Key business events are logged to support monitoring and future data analysis.
+The application can be started locally using Docker Compose with minimal configuration,
+reflecting a production-like environment.
+
+---
+
+## Getting started
+
+##### Prerequisites
+- Docker
+- Docker Compose
+- Git
+
+##### Clone the repository
 ```
+git clone https://github.com/ParisFriedChicken/onboard-project
+cd onboard-project
 
-Compile et lance :
-```bash
-mvn spring-boot:run
 ```
+##### Run locally
+```
+docker-compose up
 
-L’application démarre sur :  
-👉 [http://localhost:8080](http://localhost:8080)
+```
+The API will be available at:
+- Simple landing page: [http://localhost:8080/onboard](http://localhost:8080/onboard)
+- Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ---
 
-## 🧩 Configuration de la base de données
+## API Documentation
 
-### PostgreSQL
-Modifie le fichier `application.properties` :
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/onboard
-spring.datasource.username=postgres
-spring.datasource.password=admin
-spring.jpa.hibernate.ddl-auto=update
-```
+The API contract is documented using OpenAPI and available via Swagger UI
+once the application is running.
 
 ---
 
-## 🔍 Exemples d’utilisation
+## Data & AI Readiness
 
-**Voir collection Postman**
-
-postman/Test Onboard API.postman_collection.json
+The platform is designed as a foundation for data-driven features.
+Participation history and event metadata can be leveraged to build
+simple predictive signals, such as estimating the likelihood of event success.
 
 ---
 
-## 🧠 Structure du projet
+## Project structure
 
 ```
 src/
- ├── main/java/com/example/boardly
+ ├── main/java/com/sebdev/onboard
+ │     ├── config/      		→ Configuration classes
  │     ├── controller/      → REST Controllers
- │     ├── service/         → Logique métier
- │     ├── repository/      → Accès aux données JPA
- │     ├── model/           → Entités JPA
+ │     ├── dto/      			→ Data Transfer Objects
+ │     ├── service/         → Business Logic
+ │     ├── repository/      → JPA Data Access
+ │     ├── model/           → JPA Entities
  │     └── OnboardApplication.java
- └── test/java/...          → Tests unitaires et d’intégration
+ └── test/java/          → Unit and Integration Tests
 ```
 
 ---
 
-## 🧰 Technologies utilisées
+## Technologies
 
 - **Spring Boot 3.x**
 - **Spring Data JPA**
@@ -85,16 +115,18 @@ src/
 - **PostgreSQL**
 - **Maven**
 - **JUnit 5 + MockMvc**
+- **OpenAPI**
+- **Docker Compose**
 
 ---
 
-## 👨‍💻 Auteur
+## Auteur
 
-Projet développé par **[Sébastien Lemaitre](https://github.com/ParisFriedChicken/onboard-project)**  
-📧 Contact : sebastien.lemaitre@gmail.com
+Project developped by **[Sébastien Lemaitre](https://github.com/ParisFriedChicken/onboard-project)**  
+Contact : sebastien.lemaitre@gmail.com
 
 ---
 
-## 📝 Licence
+## Licence
 
-Ce projet est sous licence MIT — voir le fichier [LICENSE](LICENSE) pour plus de détails.
+This project is under MIT license — See file [LICENSE](LICENSE) pour plus de détails.
