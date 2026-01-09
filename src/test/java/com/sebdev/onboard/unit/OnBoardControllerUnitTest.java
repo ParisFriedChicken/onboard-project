@@ -56,6 +56,8 @@ public class OnBoardControllerUnitTest {
     public void createGame_shouldReturnCreated_whenPayloadValid() throws Exception {
         // prepare payload without status (should default to scheduled)
         var payload = new java.util.HashMap<String, Object>();
+        // include required host playerId
+        payload.put("playerId", 5);
         payload.put("address", "somewhere");
         payload.put("date", "2026-01-01T12:00:00Z");
         payload.put("maxPlayers", 6);
@@ -72,6 +74,11 @@ public class OnBoardControllerUnitTest {
         saved.setStatus("scheduled");
 
         when(gameService.saveGame(org.mockito.ArgumentMatchers.any(Game.class))).thenReturn(saved);
+
+        // mock host existence required by controller
+        Player host = new Player();
+        host.setId(5L);
+        when(playerService.findById(5L)).thenReturn(java.util.Optional.of(host));
 
         mockMvc.perform(post("/game")
                 .contentType(MediaType.APPLICATION_JSON)

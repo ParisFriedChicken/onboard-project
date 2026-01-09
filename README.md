@@ -73,6 +73,13 @@ The API will be available at:
 - Simple landing page: [http://localhost:8080/onboard](http://localhost:8080/onboard)
 - Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
+##### Test API
+
+- Run the /auth/login endpoint with the example user provided in the Swagger Doc
+- Copy the token
+- Paste it in the Authorize Section
+- Run any endpoint
+
 ---
 
 ## API Documentation

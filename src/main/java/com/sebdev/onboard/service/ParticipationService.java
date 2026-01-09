@@ -76,4 +76,30 @@ public class ParticipationService {
                 .collect(Collectors.toList());
         return Optional.of(players);
     }
+
+    /**
+     * Allow a player to change their participation status for a specific game.
+     * Returns Optional.empty() if the game or participation is not found.
+     */
+    public Optional<Participation> changeParticipationStatus(Long gameId, Player player, String status) {
+        Optional<Game> gameOpt = gameService.findById(gameId);
+        if (gameOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        Game game = gameOpt.get();
+
+        Optional<Participation> participationOpt = participationRepository.findByGameAndPlayer(game, player);
+        if (participationOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Participation participation = participationOpt.get();
+        participation.setStatus(status);
+        Participation saved = participationRepository.save(participation);
+
+        logger.info("{} - Participation status changed: playerId={}, gameId={}, status={}", Instant.now().toString(),
+                player == null ? null : String.valueOf(player.getId()), game == null ? null : String.valueOf(game.getId()), status);
+
+        return Optional.of(saved);
+    }
 }

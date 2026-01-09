@@ -27,6 +27,7 @@ import com.sebdev.onboard.dto.UpdatePlayerDto;
 import com.sebdev.onboard.dto.PlayerDto;
 import com.sebdev.onboard.dto.GameDto;
 import com.sebdev.onboard.dto.ParticipationDto;
+import com.sebdev.onboard.dto.UpdateParticipationStatusDto;
 import com.sebdev.onboard.mapper.DtoMapper;
 
 import jakarta.validation.Valid;
@@ -259,6 +260,33 @@ public class OnBoardController {
         body.put("players", players.stream().map(dtoMapper::toPlayerDto).collect(Collectors.toList()));
 
         return ResponseEntity.ok(body);
+    }
+
+    @PutMapping(value = "/game/{id}/participation/status")
+    @Operation(summary = "Update the authenticated player's participation status for a game")
+    public ResponseEntity<?> updateParticipationStatus(@PathVariable("id") Long gameId, @Valid @RequestBody UpdateParticipationStatusDto statusDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        if (participationService == null) {
+            return ResponseEntity.status(500).body("Participation service unavailable");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Player currentUser = (Player) authentication.getPrincipal();
+
+        try {
+            Optional<Participation> updated = participationService.changeParticipationStatus(gameId, currentUser, statusDto.getStatus());
+            if (updated.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(dtoMapper.toParticipationDto(updated.get()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating participation status");
+        }
     }
 
 }
