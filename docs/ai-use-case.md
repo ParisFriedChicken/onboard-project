@@ -12,9 +12,15 @@ Assessing the risk that a game will be cancelled due to low participation.
 
 | Input | Source |
 | :--- | :--- |
-| Final status of the game | DB |
 | Max number of players | DB/Parameter |
 | Number of days between the creation of the game and the start of the game | DB (Calculated) |
 | Number of current registered players | DB/Parameter |
 | No-show history of the host | DB |
-| Game type | DB/Parameter |
+| Game type | DB/Parameter | 
+
+## Outputs
+
+| Output | Description |
+| :--- | :--- |
+| Probability of cancellation | A score between 0 and 1 indicating the likelihood of the game being cancelled due to low participation. |
+| Risk level | Categorical risk level (e.g., Low, Medium, High) based on the probability of cancellation. |
