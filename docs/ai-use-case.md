@@ -12,11 +12,11 @@ Assessing the risk that a game will be cancelled due to low participation.
 
 | Input | Source |
 | :--- | :--- |
-| Max number of players | DB/Parameter |
+| Max number of players | DB |
 | Number of days between the creation of the game and the start of the game | DB (Calculated) |
-| Number of current registered players | DB/Parameter |
-| No-show history of the host | DB |
-| Game type | DB/Parameter | 
+| Number of current registered players | DB |
+| No-show history of the host | DB(Calculated) |
+| Game type | DB | 
 
 ## Outputs
 
