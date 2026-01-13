@@ -63,6 +63,18 @@ CREATE MATERIALIZED VIEW mv_best_buddies AS
 CREATE UNIQUE INDEX ON mv_best_buddies (buddy1, buddy2, count_game);
 ANALYZE mv_best_buddies;
 
+-- View 8 : Game features for AI Prediction model
+CREATE OR REPLACE VIEW vw_game_features AS
+	SELECT 
+		g.id 	AS game_id, 
+		COUNT(p.id) AS current_players,
+		max_players,
+		date::date - g.created_at::date AS days_before_event,
+		game_type AS game_type_encoded
+	FROM 
+		participation p INNER JOIN game g ON p.game_id = g.id
+	GROUP BY g.id;
+
 -- Create read-only user and grant select on views
 CREATE ROLE readonly_user WITH
 	LOGIN
