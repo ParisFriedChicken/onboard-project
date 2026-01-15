@@ -25,5 +25,5 @@
 
 ##### game_type_encoded
 - Formula: board_game = 1, outdoor_game = 2
-- Range: 0 → 2
+- Range: 1 → 2
 

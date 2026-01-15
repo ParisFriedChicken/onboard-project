@@ -65,15 +65,35 @@ ANALYZE mv_best_buddies;
 
 -- View 8 : Game features for AI Prediction model
 CREATE OR REPLACE VIEW vw_game_features AS
-	SELECT 
-		g.id 	AS game_id, 
-		COUNT(p.id) AS current_players,
-		max_players,
-		date::date - g.created_at::date AS days_before_event,
-		game_type AS game_type_encoded
-	FROM 
-		participation p INNER JOIN game g ON p.game_id = g.id
+	SELECT
+	g.id AS game_id,
+	g.host_player_id AS host_id,
+	ROUND(COUNT(p.id::numeric) / max_players::numeric, 2) as fill_ratio,
+	date::date - g.created_at::date AS days_before_event,
+	CASE
+  		WHEN game_type ='board_game' THEN 1
+  		WHEN game_type ='outdoor_game' THEN 2
+		ELSE 0
+	END	
+		AS game_type_encoded
+	FROM
+	participation p INNER JOIN game g ON p.game_id = g.id
 	GROUP BY g.id;
+
+-- View 9 : Player features for AI Prediction model
+CREATE OR REPLACE VIEW vw_player_features AS
+	SELECT
+	p1.player_id,
+	ROUND(count(p2.id)::numeric/count(p1.id)::numeric, 2) as host_no_show_rate,
+	count(p1.id)::numeric AS host_total_games
+	FROM participation p1 left join participation p2 on p1.id = p2.id and p2.status = 'no_show'
+	GROUP BY p1.player_id;
+
+-- View 10 : Full game and host player features for AI Prediction model
+CREATE OR REPLACE VIEW vw_full_game_features AS
+	SELECT *
+	FROM vw_game_features gf, vw_player_features pf
+	WHERE gf.host_id = pf.player_id;
 
 -- Create read-only user and grant select on views
 CREATE ROLE readonly_user WITH
