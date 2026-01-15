@@ -76,10 +76,10 @@ CREATE OR REPLACE VIEW vw_game_features AS
 		ELSE 0
 	END	
 		AS game_type_encoded
-	FROM
-	participation p INNER JOIN game g ON p.game_id = g.id
+	FROM participation p INNER JOIN game g ON p.game_id = g.id
+	WHERE date::date - g.created_at::date >= 0
 	GROUP BY g.id;
-
+	
 -- View 9 : Player features for AI Prediction model
 CREATE OR REPLACE VIEW vw_player_features AS
 	SELECT
