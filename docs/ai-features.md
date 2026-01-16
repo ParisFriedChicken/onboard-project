@@ -27,3 +27,14 @@
 - Formula: board_game = 1, outdoor_game = 2
 - Range: 1 → 2
 
+## Target
+
+- Target: participation_rate
+- Definition: actual_players / max_players
+- Range: 0 → 1
+
+## Model choice
+
+We chose a simple logistic regression model to produce an interpretable participation score.
+The goal is not prediction accuracy but understanding which factors influence attendance.
+This allows internal teams to trust the signal and use it for decision-making.

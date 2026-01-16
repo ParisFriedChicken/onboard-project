@@ -44,18 +44,22 @@ CREATE OR REPLACE VIEW vw_active_players_last_30_days AS
 -- View 7 : Game features for AI Prediction model
 CREATE OR REPLACE VIEW vw_game_features AS
 	SELECT
-	g.id AS game_id,
-	g.host_player_id AS host_id,
-	ROUND(COUNT(p.id::numeric) / max_players::numeric, 2) as fill_ratio,
-	date::date - g.created_at::date AS days_before_event,
-	CASE
-  		WHEN game_type ='board_game' THEN 1
-  		WHEN game_type ='outdoor_game' THEN 2
-		ELSE 0
-	END	
-		AS game_type_encoded
+		g.id AS game_id,
+		g.host_player_id AS host_id,
+		g.max_players,
+		COUNT(p.id::numeric) as registered_players,
+		ROUND(COUNT(p.id::numeric) / max_players::numeric, 2) as fill_ratio,
+		date::date - g.created_at::date AS days_before_event,
+		CASE
+	  		WHEN game_type ='board_game' THEN 1
+	  		WHEN game_type ='outdoor_game' THEN 2
+			ELSE 0
+		END	
+			AS game_type_encoded,
+		ROUND(AVG(CASE WHEN p.status = 'attended' THEN 1 ELSE 0 END), 2) as actual_participation_rate 
 	FROM participation p INNER JOIN game g ON p.game_id = g.id
 	WHERE date::date - g.created_at::date >= 0
+		-- AND date::date < CURRENT_DATE::date
 	GROUP BY g.id;
 	
 -- View 8 : Player features for AI Prediction model
@@ -69,10 +73,13 @@ CREATE OR REPLACE VIEW vw_player_features AS
 
 -- View 9 : Full game and host player features for AI Prediction model
 CREATE OR REPLACE VIEW vw_full_game_features AS
-	SELECT *
-	FROM vw_game_features gf, vw_player_features pf
+	SELECT game_id, host_no_show_rate, host_total_games, max_players, registered_players, fill_ratio, days_before_event, game_type_encoded, actual_participation_rate
+	FROM vw_player_features pf, vw_game_features gf
 	WHERE gf.host_id = pf.player_id;
-	
+
+-- CSV Export of the view
+-- COPY (SELECT * FROM public.vw_full_game_features) TO 'F:/dev/onboard/sql/exports/games_dataset.csv' WITH (FORMAT CSV, HEADER); 
+
 -- View 10 : Best Buddies (by how many games they played together)
 CREATE MATERIALIZED VIEW mv_best_buddies AS
 	WITH players_duos AS (
