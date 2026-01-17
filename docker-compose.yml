@@ -66,6 +66,17 @@ services:
     networks:
       - backend
 
+  ai-service:
+    build:
+      context: ./ai/ai-service
+      dockerfile: Dockerfile
+    container_name: dev_ai_service
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+    restart: unless-stopped
+
 volumes:
   pgdata: 
   grafana_data:

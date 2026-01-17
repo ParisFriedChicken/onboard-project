@@ -1,8 +1,8 @@
 import pandas as pd
 
-df = pd.read_csv("../exports/games_dataset_final.csv")
+df = pd.read_csv("exports/games_dataset_final.csv")
 y = df["participation_rate"]
-X = df.drop(columns=["participation_rate"])
+X = df.drop(columns=["game_id", "participation_rate"])
 
 from sklearn.model_selection import train_test_split
 
@@ -20,7 +20,7 @@ print(predictions[:10])
 
 import joblib
 
-joblib.dump(model, "../ai/models/participation_model.joblib")
+joblib.dump(model, "models/participation_model.joblib")
 
 for feature, coef in zip(X.columns, model.coef_):
     print(feature, coef)
