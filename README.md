@@ -65,6 +65,9 @@ cd onboard-project
 
 ```
 ##### Run locally
+
+- First start docker 
+
 ```
 docker-compose up
 
