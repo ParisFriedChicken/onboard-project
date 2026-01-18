@@ -82,18 +82,30 @@ The API will be available at:
 
 ---
 
-## API Documentation
-
-The API contract is documented using OpenAPI and available via Swagger UI
-once the application is running.
-
----
-
 ## Data & AI Readiness
 
 The platform is designed as a foundation for data-driven features.
 Participation history and event metadata can be leveraged to build
 simple predictive signals, such as estimating the likelihood of event success.
+
+---
+
+## AI Use Case
+
+We are facing a problem with the usage of the app : a lot of games have a small participation rate, which often provoke cancellation of those games.
+To solve that problem, we need an insight on the participation rate, how it can be influenced by certain characteristics relative to these games.
+This predictive signal will help internal teams to anticipate risk and take some actions to mitigate them.
+
+##### How the prediction is used
+
+This signal can be used by the product team, to help them design and prioritize future functionalities intended to reduce the risk of low game participation.
+It can be used with virtual game characteristics (such as host history of not showing to the games he was supposed to participate..) or real games, before they occur, to predict its chance of success.
+This signal does not alter automatically the user experience.
+
+##### Limits
+
+The data used for this model is synthetic and limited, so its accuracy is restricted. The feedback loop mechanism isn't implemented.
+With real usage data, the model performance could be improved.
 
 ---
 
@@ -124,6 +136,8 @@ src/
 - **JUnit 5 + MockMvc**
 - **OpenAPI**
 - **Docker Compose**
+- **Python**
+- **Fast API**
 
 ---
 
