@@ -2,7 +2,7 @@ services:
 
   postgres:
     image: postgres:17
-    container_name: dev_postgres
+    container_name: dev_onboard_postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
@@ -22,7 +22,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: dev_grafana
+    container_name: dev_onboard_grafana
     ports:
       - "3000:3000"                            # Grafana UI
     environment:
@@ -35,7 +35,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: dev_pgadmin
+    container_name: dev_onboard_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@local.com
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -52,7 +52,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: myapp:dev
-    container_name: dev_app
+    container_name: dev_onboard_app
     ports:
       - "8080:8080"
     environment:
@@ -70,7 +70,7 @@ services:
     build:
       context: ./ai/ai-service
       dockerfile: Dockerfile
-    container_name: dev_ai_service
+    container_name: dev_onboard_ai_service
     ports:
       - "8000:8000"
     networks:
