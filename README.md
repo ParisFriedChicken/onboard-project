@@ -80,6 +80,11 @@ The API will be available at:
 - Paste it in the Authorize Section
 - Run any endpoint
 
+##### Test AI predictive signal
+
+- Swagger link : [http://localhost:8000/docs](http://localhost:8000/docs)
+- Try the prediction method and see the changing of participation rate of a game by altering its parameters
+
 ---
 
 ## Data & AI Readiness
