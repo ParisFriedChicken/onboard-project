@@ -33,11 +33,13 @@ def predict(data: PredictionInput):
         data.days_before_event
     ]])
 
-    part_pred = model.predict(X)[0]
+    part_pred = float(model.predict_proba(X)[:, 1][0])
+    print(part_pred)
 
-    if part_pred < 0.6:
+
+    if part_pred < 0.90:
         risk = "high"
-    elif part_pred < 0.7:
+    elif part_pred < 0.95:
         risk = "medium"
     else:
         risk = "low"

@@ -1,22 +1,21 @@
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 
 df = pd.read_csv("exports/games_dataset_final.csv")
-y = df["participation_rate"]
-X = df.drop(columns=["game_id", "participation_rate"])
+df["is_participation_high"] = (df["participation_rate"] >= 0.7).astype(int)
 
-from sklearn.model_selection import train_test_split
+y = df["is_participation_high"]
+X = df.drop(columns=["game_id", "participation_rate", "is_participation_high"])
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-from sklearn.linear_model import LinearRegression
-
-model = LinearRegression()
+model = LogisticRegression()
 model.fit(X_train, y_train)
 
-predictions = model.predict(X_test)
-predictions = predictions.clip(0, 1)
+probas = model.predict_proba(X_test)[:, 1]  # probabilité entre 0 et 1
 
-print(predictions[:10])
+print(probas[:10])
 
 import joblib
 
