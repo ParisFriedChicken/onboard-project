@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class RegisterPlayerDto {
 
-	@Schema(description = "Email address of the player", example = "johndoe@gmail.com")
+	@Schema(description = "Email address of the player", example = "eg2@gmail.com")
 	private String email;
 
-	@Schema(description = "Password of the player", example = "xxx")
+	@Schema(description = "Password of the player", example = "password")
 	private String password;
 
 	@Schema(description = "Full name of the player", example = "John Doe")

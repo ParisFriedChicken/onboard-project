@@ -12,6 +12,9 @@ import com.sebdev.onboard.model.Player;
 import com.sebdev.onboard.responses.LoginResponse;
 import com.sebdev.onboard.service.AuthenticationService;
 import com.sebdev.onboard.service.JwtService;
+import com.sebdev.onboard.dto.PlayerDto;
+import com.sebdev.onboard.mapper.DtoMapper;
+import com.sebdev.onboard.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,18 +26,22 @@ public class AuthenticationController {
     private final JwtService jwtService;
     
     private final AuthenticationService authenticationService;
+    private final PlayerService playerService;
+    private final DtoMapper dtoMapper;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, PlayerService playerService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.playerService = playerService;
+        this.dtoMapper = new DtoMapper(playerService);
     }
 
     @PostMapping("/signup")
     @Operation(summary = "Register a new player")
-    public ResponseEntity<Player> register(@RequestBody RegisterPlayerDto registerUserDto) {
+    public ResponseEntity<PlayerDto> register(@RequestBody RegisterPlayerDto registerUserDto) {
         Player registeredUser = authenticationService.signup(registerUserDto);
 
-        return ResponseEntity.ok(registeredUser);
+        return ResponseEntity.ok(dtoMapper.toPlayerDto(registeredUser));
     }
 
     @PostMapping("/login")

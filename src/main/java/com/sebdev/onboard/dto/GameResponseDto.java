@@ -1,36 +1,26 @@
 package com.sebdev.onboard.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
-import jakarta.validation.constraints.NotNull;
 
-public class GameDto {
+public class GameResponseDto {
 
     private Long id;
-
-    @Schema(description = "Host player id")
-    @NotNull(message = "playerId is required")
     private Long playerId;
-
-    @Schema(description = "Game address or venue", example = "123 Main St")
     private String address;
-
-    @Schema(description = "Scheduled date/time for the game (ISO 8601)", example = "2026-04-01T14:00:00Z")
     private Date date;
-
     private Date createdAt;
     private Date updatedAt;
     private Long version;
-
-    @Schema(description = "Status of the game", example = "created")
     private String status;
-    
     private Integer maxPlayers;
     private Integer minPlayers;
     private String gameType;
-
-    public GameDto() {}
-
+    
+    private ParticipationPredictionResponseDto participationPrediction;
+    
+    
+    public GameResponseDto() {}
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -63,4 +53,13 @@ public class GameDto {
 
     public String getGameType() { return gameType; }
     public void setGameType(String gameType) { this.gameType = gameType; }
+
+	public ParticipationPredictionResponseDto getParticipationPrediction() {
+		return participationPrediction;
+	}
+
+	public void setParticipationPrediction(ParticipationPredictionResponseDto participationPrediction) {
+		this.participationPrediction = participationPrediction;
+	}
+    
 }

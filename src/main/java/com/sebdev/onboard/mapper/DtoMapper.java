@@ -3,6 +3,7 @@ package com.sebdev.onboard.mapper;
 import java.util.Optional;
 
 import com.sebdev.onboard.dto.GameDto;
+import com.sebdev.onboard.dto.GameResponseDto;
 import com.sebdev.onboard.dto.ParticipationDto;
 import com.sebdev.onboard.dto.PlayerDto;
 import com.sebdev.onboard.model.Game;
@@ -42,6 +43,24 @@ public class DtoMapper {
         dto.setMaxPlayers(g.getMaxPlayers());
         dto.setMinPlayers(g.getMinPlayers());
         dto.setGameType(g.getGameType());
+        return dto;
+    }
+
+    // Map GameResponseDto (service layer enriched DTO) to GameDto (public-facing DTO)
+    public GameDto toGameDto(GameResponseDto r) {
+        if (r == null) return null;
+        GameDto dto = new GameDto();
+        dto.setId(r.getId());
+        dto.setPlayerId(r.getPlayerId());
+        dto.setAddress(r.getAddress());
+        dto.setDate(r.getDate());
+        dto.setCreatedAt(r.getCreatedAt());
+        dto.setUpdatedAt(r.getUpdatedAt());
+        dto.setVersion(r.getVersion());
+        dto.setStatus(r.getStatus());
+        dto.setMaxPlayers(r.getMaxPlayers());
+        dto.setMinPlayers(r.getMinPlayers());
+        dto.setGameType(r.getGameType());
         return dto;
     }
 

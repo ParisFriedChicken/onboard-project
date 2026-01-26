@@ -6,12 +6,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -27,8 +25,9 @@ import com.sebdev.onboard.dto.UpdatePlayerDto;
 import com.sebdev.onboard.dto.PlayerDto;
 import com.sebdev.onboard.dto.GameDto;
 import com.sebdev.onboard.dto.ParticipationDto;
+import com.sebdev.onboard.dto.ParticipationPredictionResponseDto;
 import com.sebdev.onboard.dto.UpdateParticipationStatusDto;
-import com.sebdev.onboard.mapper.DtoMapper;
+ import com.sebdev.onboard.mapper.DtoMapper;
 
 import jakarta.validation.Valid;
 
@@ -133,9 +132,9 @@ public class OnBoardController {
 
         try {
             Game game = dtoMapper.toGameEntity(gameDto);
-            Game saved = gameService.saveGame(game);
+            com.sebdev.onboard.dto.GameResponseDto saved = gameService.saveGame(game);
             java.net.URI location = uriBuilder.path("/game/{id}").buildAndExpand(saved.getId()).toUri();
-            return ResponseEntity.created(location).body(dtoMapper.toGameDto(saved));
+            return ResponseEntity.created(location).body(saved);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error creating game");
         }
@@ -166,7 +165,12 @@ public class OnBoardController {
             if (updated.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(dtoMapper.toGameDto(updated.get()));
+            // include AI prediction for the updated game
+            Map<String, Object> body = new HashMap<>();
+            body.put("game", dtoMapper.toGameDto(updated.get()));
+            ParticipationPredictionResponseDto pred = gameService.predictForGame(updated.get()).orElse(null);
+            body.put("prediction", pred);
+            return ResponseEntity.ok(body);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(e.getMessage());
         } catch (Exception e) {
@@ -193,7 +197,15 @@ public class OnBoardController {
             Participation p = created.get();
             java.net.URI location = uriBuilder.path("/game/{id}/participation/{pid}")
                     .buildAndExpand(gameId, p.getId()).toUri();
-            return ResponseEntity.created(location).body(dtoMapper.toParticipationDto(p));
+            // enrich response with AI prediction for the game (if available)
+            Map<String, Object> body = new HashMap<>();
+            body.put("participation", dtoMapper.toParticipationDto(p));
+            // fetch game and prediction (game should exist because participation creation succeeded)
+            gameService.findById(gameId).ifPresent(g -> {
+                ParticipationPredictionResponseDto pred = gameService.predictForGame(g).orElse(null);
+                body.put("prediction", pred);
+            });
+            return ResponseEntity.created(location).body(body);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(e.getMessage());
         } catch (Exception e) {
@@ -228,7 +240,12 @@ public class OnBoardController {
             Participation created = participationService.createParticipation(participationDto.getGameId(), playerOpt.get()).orElseThrow(() -> new IllegalArgumentException("Unable to create participation"));
             java.net.URI location = uriBuilder.path("/game/{id}/participation/{pid}")
                     .buildAndExpand(participationDto.getGameId(), created.getId()).toUri();
-            return ResponseEntity.created(location).body(dtoMapper.toParticipationDto(created));
+            // include AI prediction for the game in the response
+            Map<String, Object> body = new HashMap<>();
+            body.put("participation", dtoMapper.toParticipationDto(created));
+            ParticipationPredictionResponseDto pred = gameService.predictForGame(gameOpt.get()).orElse(null);
+            body.put("prediction", pred);
+            return ResponseEntity.created(location).body(body);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(e.getMessage());
         } catch (Exception e) {

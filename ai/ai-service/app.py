@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import joblib
 import numpy as np
 
@@ -8,13 +8,16 @@ app = FastAPI(title="AI Participation Prediction Service")
 model = joblib.load("models/participation_model.joblib")
 
 class PredictionInput(BaseModel):
-	fill_ratio : float
-	host_no_show_rate : float
-	registered_players : int
-	max_players : int
-	game_type : int
-	host_total_games : int
-	days_before_event : int
+    fill_ratio: float = Field(..., alias="fillRatio")
+    host_no_show_rate: float = Field(..., alias="hostNoShowRate")
+    registered_players: int = Field(..., alias="registeredPlayers")
+    max_players: int = Field(..., alias="maxPlayers")
+    game_type: int = Field(..., alias="gameType")
+    host_total_games: int = Field(..., alias="hostTotalGames")
+    days_before_event: int = Field(..., alias="daysBeforeEvent")
+
+    class Config:
+        allow_population_by_field_name = True
 
 class PredictionOutput(BaseModel):
     participation_prediction: float
@@ -34,7 +37,6 @@ def predict(data: PredictionInput):
     ]])
 
     part_pred = float(model.predict_proba(X)[:, 1][0])
-    print(part_pred)
 
 
     if part_pred < 0.90:
@@ -44,6 +46,9 @@ def predict(data: PredictionInput):
     else:
         risk = "low"
 
+    print(round(part_pred, 2))
+    print(risk)
+    
     return {
         "participation_prediction": round(part_pred, 2),
         "risk_level": risk

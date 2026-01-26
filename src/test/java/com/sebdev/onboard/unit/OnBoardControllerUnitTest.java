@@ -14,6 +14,7 @@ import com.sebdev.onboard.repository.PlayerRepository;
 import com.sebdev.onboard.service.GameService;
 import com.sebdev.onboard.service.ParticipationService;
 import com.sebdev.onboard.service.PlayerService;
+import com.sebdev.onboard.dto.GameResponseDto;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,8 +65,10 @@ public class OnBoardControllerUnitTest {
         payload.put("minPlayers", 2);
         payload.put("gameType", "3");
 
-        Game saved = new Game();
+        // The service now returns a GameResponseDto containing saved game data + prediction
+        GameResponseDto saved = new GameResponseDto();
         saved.setId(10L);
+        saved.setPlayerId(5L);
         saved.setAddress("somewhere");
         saved.setDate(new Date());
         saved.setMaxPlayers(6);
