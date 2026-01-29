@@ -48,7 +48,7 @@ CREATE OR REPLACE VIEW vw_game_features AS
 		g.host_player_id AS host_id,
 		g.max_players,
 		COUNT(p.id::numeric) as registered_players,
-		ROUND(COUNT(p.id::numeric) / max_players::numeric, 2) as fill_ratio,
+		ROUND(COUNT(p.id::numeric) / NULLIF(g.max_players,0)::numeric, 2) as fill_ratio,
 		date::date - g.created_at::date AS days_before_event,
 		CASE
 	  		WHEN game_type ='board_game' THEN 1
@@ -66,7 +66,7 @@ CREATE OR REPLACE VIEW vw_game_features AS
 CREATE OR REPLACE VIEW vw_player_features AS
 	SELECT
 	p1.player_id,
-	ROUND(count(p2.id)::numeric/count(p1.id)::numeric, 2) as host_no_show_rate,
+	ROUND(count(p2.id)::numeric/NULLIF(count(p1.id), 0)::numeric, 2) as host_no_show_rate,
 	count(p1.id)::numeric AS host_total_games
 	FROM participation p1 left join participation p2 on p1.id = p2.id and p2.status = 'no_show'
 	GROUP BY p1.player_id;

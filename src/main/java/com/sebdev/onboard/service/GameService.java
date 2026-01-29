@@ -82,7 +82,20 @@ public class GameService {
 		// Build a prediction request using available fields from Game.
 		ParticipationPredictionRequestDto req = new ParticipationPredictionRequestDto();
 
-		req.setRegisteredPlayers(0);
+		// Try to read the real registered players count from the DB view via repository.
+		int registered = 0;
+		if (game.getId() != null) {
+			try {
+				Integer dbRegistered = gameRepository.findRegisteredPlayersByGameId(game.getId());
+				if (dbRegistered != null) {
+					registered = dbRegistered.intValue();
+				}
+			} catch (Exception e) {
+				logger.warn("Could not fetch registered players for game id {}: {}", game.getId(), e.getMessage());
+				// keep default registered = 0
+			}
+		}
+		req.setRegisteredPlayers(registered);
 
 		// maxPlayers: from game (or 0)
 		req.setMaxPlayers(game.getMaxPlayers() == null ? 0 : game.getMaxPlayers());
@@ -94,18 +107,51 @@ public class GameService {
 		}
 		req.setFillRatio(fillRatio);
 
-		// hostTotalGames and hostNoShowRate: unknown here -> default 0
-		req.setHostTotalGames(0);
-		req.setHostNoShowRate(0d);
+		// hostTotalGames and hostNoShowRate: try to read from the full game/player features view
+		int hostTotalGames = 0;
+		double hostNoShowRate = 0d;
+		Long hostId = game.getPlayer() == null ? null : game.getPlayer().getId();
+		if (hostId != null) {
+			try {
+				Integer dbHostTotal = gameRepository.findHostTotalGamesByPlayerId(hostId);
+				if (dbHostTotal != null) {
+					hostTotalGames = dbHostTotal.intValue();
+				}
+				Double dbNoShow = gameRepository.findHostNoShowRateByPlayerId(hostId);
+				if (dbNoShow != null) {
+					hostNoShowRate = dbNoShow.doubleValue();
+				}
+			} catch (Exception e) {
+				logger.warn("Could not fetch host features for host player id {}: {}", hostId, e.getMessage());
+			}
+		}
+		req.setHostTotalGames(hostTotalGames);
+		req.setHostNoShowRate(hostNoShowRate);
 
-		// gameType: 1 : board_game
-		req.setGameType(1);
+		// gameType: map string stored on game to encoded int used by the AI model
+		int gameTypeEncoded = 0;
+		String gt = game.getGameType();
+		if (gt != null) {
+			String lower = gt.trim().toLowerCase();
+			switch (lower) {
+				case "board_game":
+					gameTypeEncoded = 1;
+					break;
+				case "outdoor_game":
+					gameTypeEncoded = 2;
+					break;
+				default:
+					gameTypeEncoded = 0;
+			}
+		}
+		req.setGameType(gameTypeEncoded);
 
 		// daysBeforeEvent: difference between now and game.date in days (rounded down)
 		int daysBefore = 0;
 		Date date = game.getDate();
-		if (date != null) {
-			ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+		Date createdAt = game.getCreatedAt();
+		if (date != null && createdAt != null) {
+			ZonedDateTime now = ZonedDateTime.ofInstant(createdAt.toInstant(), ZoneId.systemDefault());
 			ZonedDateTime event = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 			long seconds = Duration.between(now, event).getSeconds();
 			daysBefore = (int) Math.floor(seconds / 86400.0);

@@ -69,16 +69,16 @@ cd onboard-project
 - First start docker 
 
 ```
-docker-compose up
+docker-compose up -d
 
 ```
 The API will be available at:
-- Simple landing page: [http://localhost:8080/onboard](http://localhost:8080/onboard)
 - Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ##### Test API
 
-- Run the /auth/login endpoint with the example user provided in the Swagger Doc
+- At first use : run the /auth/sigup endpoint to create a user access (click on "Try it out")
+- Run the /auth/login endpoint with the created user's login/password 
 - Copy the token
 - Paste it in the Authorize Section
 - Run any endpoint
@@ -122,9 +122,9 @@ With real usage data, the model performance could be improved.
 ```
 src/
  ├── main/java/com/sebdev/onboard
- │     ├── config/      		→ Configuration classes
+ │     ├── config/      	→ Configuration classes
  │     ├── controller/      → REST Controllers
- │     ├── dto/      			→ Data Transfer Objects
+ │     ├── dto/      		→ Data Transfer Objects
  │     ├── service/         → Business Logic
  │     ├── repository/      → JPA Data Access
  │     ├── model/           → JPA Entities
