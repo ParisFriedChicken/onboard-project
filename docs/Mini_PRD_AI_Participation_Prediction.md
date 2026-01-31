@@ -122,3 +122,15 @@ So that I can get help making data-driven product decision
 - The raw signal must be between 0 and 1
 - The signal must accept relevant parameters for input
 - The signal must reflect obvious assumption about a game (ie if a game is created 1 day before, the participation rate prediction should be low)
+
+## 4. Product KPIs
+
+|KPI|Why|Limits|
+|---|---|------|
+| Percentage of new games with early identified risk | Measures the effective usage of the signal | Doesn't make sure every targetted internal user is using the signal |
+| Adoption by the internal teams | Insures there's a real demand for this signal | It doesn't assess the rielability of the signal  |
+| Increased Participation rate | Indicates if the signal has a positive effect on the internal team actions | We can't tell for sure if the participation evolution is guided by the use of the signal |
+
+- What we don't measure :
+  - Quality of the model (difference between real and calculated participation rate) -> for now we just want to know the user adoption 
+  - End-user satisfaction -> we just focus on the events data
