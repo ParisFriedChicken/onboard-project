@@ -64,12 +64,12 @@ CREATE OR REPLACE VIEW vw_game_features AS
 	
 -- View 8 : Player features for AI Prediction model
 CREATE OR REPLACE VIEW vw_player_features AS
-	SELECT
-	p1.player_id,
-	ROUND(count(p2.id)::numeric/NULLIF(count(p1.id), 0)::numeric, 2) as host_no_show_rate,
-	count(p1.id)::numeric AS host_total_games
-	FROM participation p1 left join participation p2 on p1.id = p2.id and p2.status = 'no_show'
-	GROUP BY p1.player_id;
+ SELECT p.id as player_id,
+    round(count(p2.id)::numeric / NULLIF(count(p1.id), 0)::numeric, 2) AS host_no_show_rate,
+    count(p1.id)::numeric AS host_total_games
+   FROM player p LEFT JOIN participation p1 ON p.id = p1.player_id 
+   LEFT JOIN participation p2 ON p1.id = p2.id AND p2.status::text = 'no_show'::text
+   GROUP BY p.id;
 
 -- View 9 : Full game and host player features for AI Prediction model
 CREATE OR REPLACE VIEW vw_full_game_features AS
