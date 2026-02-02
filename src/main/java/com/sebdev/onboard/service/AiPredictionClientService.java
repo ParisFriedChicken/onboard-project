@@ -36,6 +36,8 @@ public class AiPredictionClientService {
 					ParticipationPredictionResponseDto.class
 					);
 
+			logger.info(aiPredictionUrl);
+			logger.info(response.getRiskLevel());
 
 			return Optional.ofNullable(response);
 
