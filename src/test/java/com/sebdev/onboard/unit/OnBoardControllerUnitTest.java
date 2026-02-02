@@ -122,6 +122,6 @@ public class OnBoardControllerUnitTest {
 
         mockMvc.perform(post("/game/1/participation"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(99));
+                .andExpect(jsonPath("participation.id").value(99));
     }
 }
