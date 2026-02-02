@@ -115,6 +115,14 @@ This signal does not alter automatically the user experience.
 The data used for this model is synthetic and limited, so its accuracy is restricted. The feedback loop mechanism isn't implemented.
 With real usage data, the model performance could be improved.
 
+## Observability & Monitoring
+
+### Logged events
+The following events are logged:
+- AI prediction request received
+- AI prediction successfully returned
+- AI service failure
+
 ---
 
 ## Project structure
