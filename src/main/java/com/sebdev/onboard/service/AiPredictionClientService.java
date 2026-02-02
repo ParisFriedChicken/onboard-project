@@ -40,7 +40,7 @@ public class AiPredictionClientService {
 			return Optional.ofNullable(response);
 
 		} catch (Exception e) {
-			// log.warn("AI prediction unavailable", e);
+			logger.warn("AI prediction unavailable", e);
 			return Optional.empty();
 		}
 	}
