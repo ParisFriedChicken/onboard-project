@@ -70,7 +70,7 @@ services:
     build:
       context: ./ai/ai-service
       dockerfile: Dockerfile
-    container_name: dev_onboard_ai_service
+    container_name: dev-onboard-ai-service
     ports:
       - "8000:8000"
     networks:
