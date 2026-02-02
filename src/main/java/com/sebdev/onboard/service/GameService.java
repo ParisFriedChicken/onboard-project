@@ -75,6 +75,12 @@ public class GameService {
         // Attach prediction result if present
         gameResponseDto.setParticipationPrediction(prediction.orElse(null));
         
+        prediction.ifPresentOrElse(
+        		pred -> logger.info("{} - Participation prediction for game id {}: riskLevel={}", Instant.now().toString(), saved.getId(), pred.getRiskLevel()),
+        		() -> logger.info("{} - No participation prediction available for game id {}", Instant.now().toString(), saved.getId())
+        		);
+					
+        
         return gameResponseDto;
     }
 

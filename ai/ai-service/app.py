@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
+from log_config import setup_logging
 import joblib
 import numpy as np
+import logging
+
+setup_logging()
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="AI Participation Prediction Service")
 
@@ -26,6 +32,8 @@ class PredictionOutput(BaseModel):
 @app.post("/ai/predict-participation", response_model=PredictionOutput)
 def predict(data: PredictionInput):
 
+    logger.info(f"PredictionInput Data : {data}")
+	
     X = np.array([[
         data.fill_ratio,
         data.host_no_show_rate,
@@ -38,7 +46,6 @@ def predict(data: PredictionInput):
 
     part_pred = float(model.predict_proba(X)[:, 1][0])
 
-
     if part_pred < 0.90:
         risk = "high"
     elif part_pred < 0.95:
@@ -46,9 +53,8 @@ def predict(data: PredictionInput):
     else:
         risk = "low"
 
-    print(round(part_pred, 2))
-    print(risk)
-    
+    logger.info(f"PredictionOutput Data : participation_prediction={part_pred}, risk_level={risk}")
+        
     return {
         "participation_prediction": round(part_pred, 2),
         "risk_level": risk
