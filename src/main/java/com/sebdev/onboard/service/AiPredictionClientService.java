@@ -1,4 +1,4 @@
-package com.sebdev.onboard.service;
+ package com.sebdev.onboard.service;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,10 @@ public class AiPredictionClientService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Value("${ai.prediction.url}")
+	private String aiPredictionUrl;
+	
 	private static final Logger logger = LoggerFactory.getLogger(AiPredictionClientService.class);
 
 	public Optional<ParticipationPredictionResponseDto> predictParticipation(
@@ -26,7 +31,7 @@ public class AiPredictionClientService {
 
 		try {
 			ParticipationPredictionResponseDto response = restTemplate.postForObject(
-					"http://localhost:8000/ai/predict-participation",
+					aiPredictionUrl,
 					request,
 					ParticipationPredictionResponseDto.class
 					);
