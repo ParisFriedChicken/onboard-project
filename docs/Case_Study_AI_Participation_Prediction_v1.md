@@ -77,7 +77,14 @@ the AI Service can be unavailable, the users aren't able to make product decisio
 
 ### Next (1-3 months)
 
-- 
-- 
+- Compare prediction to the reality
+- Adjust risks thresholds (High/Medium/Low)
+- Collect internal team's feedback
 
 ### Later (3-6 months)
+
+- Add new features to the signal
+- Improve model
+
+We don't add new feature to the AI service before having a real usage.
+

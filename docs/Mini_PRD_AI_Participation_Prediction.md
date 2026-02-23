@@ -134,3 +134,4 @@ So that I can get help making data-driven product decision
 - What we don't measure :
   - Quality of the model (difference between real and calculated participation rate) -> for now we just want to know the user adoption 
   - End-user satisfaction -> we just focus on the events data
+
